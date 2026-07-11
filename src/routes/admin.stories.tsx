@@ -92,7 +92,7 @@ function StoriesAdmin() {
                 <p className="text-xs text-muted-foreground uppercase">{s.category} · {s.travellerName}</p>
                 <h3 className="mt-1 font-semibold">{s.title}</h3>
                 <div className="mt-3 flex gap-2">
-                  <button onClick={() => setEditing({ ...s, coverImageKey: undefined, travellerAvatarKey: undefined })} className="btn-ghost-pill !py-1 !px-3 text-xs">Edit</button>
+                  <button onClick={() => setEditing({ ...s, isActive: s.isActive ?? true, sortOrder: s.sortOrder ?? 0, coverImageKey: undefined, travellerAvatarKey: undefined })} className="btn-ghost-pill !py-1 !px-3 text-xs">Edit</button>
                   <button onClick={() => del(s)} className="text-destructive text-xs"><Trash2 className="h-4 w-4 inline" /></button>
                 </div>
               </div>
@@ -127,7 +127,7 @@ function StoriesAdmin() {
             </div>
 
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
-              <UploadBox label="Cover Image" url={editing.coverImageUrl} uploading={uploading === "cover"} onFile={(f) => upload("cover", f)} />
+              <UploadBox label="Cover Image" url={editing.coverImageUrl ?? undefined} uploading={uploading === "cover"} onFile={(f) => upload("cover", f)} />
               <UploadBox label="Avatar" url={editing.travellerAvatarUrl ?? undefined} uploading={uploading === "avatar"} onFile={(f) => upload("avatar", f)} />
             </div>
 
