@@ -16,7 +16,9 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DestinationsIndexRouteImport } from './routes/destinations.index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slug'
+import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as BookingRefStatusRouteImport } from './routes/booking.$ref.status'
 
 const StoriesRoute = StoriesRouteImport.update({
@@ -54,9 +56,19 @@ const DestinationsIndexRoute = DestinationsIndexRouteImport.update({
   path: '/destinations/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DestinationsSlugRoute = DestinationsSlugRouteImport.update({
   id: '/destinations/$slug',
   path: '/destinations/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/admin/login',
+  path: '/admin/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BookingRefStatusRoute = BookingRefStatusRouteImport.update({
@@ -72,7 +84,9 @@ export interface FileRoutesByFullPath {
   '/gallery': typeof GalleryRoute
   '/packages': typeof PackagesRoute
   '/stories': typeof StoriesRoute
+  '/admin/login': typeof AdminLoginRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
+  '/admin/': typeof AdminIndexRoute
   '/destinations/': typeof DestinationsIndexRoute
   '/booking/$ref/status': typeof BookingRefStatusRoute
 }
@@ -83,7 +97,9 @@ export interface FileRoutesByTo {
   '/gallery': typeof GalleryRoute
   '/packages': typeof PackagesRoute
   '/stories': typeof StoriesRoute
+  '/admin/login': typeof AdminLoginRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
+  '/admin': typeof AdminIndexRoute
   '/destinations': typeof DestinationsIndexRoute
   '/booking/$ref/status': typeof BookingRefStatusRoute
 }
@@ -95,7 +111,9 @@ export interface FileRoutesById {
   '/gallery': typeof GalleryRoute
   '/packages': typeof PackagesRoute
   '/stories': typeof StoriesRoute
+  '/admin/login': typeof AdminLoginRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
+  '/admin/': typeof AdminIndexRoute
   '/destinations/': typeof DestinationsIndexRoute
   '/booking/$ref/status': typeof BookingRefStatusRoute
 }
@@ -108,7 +126,9 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/packages'
     | '/stories'
+    | '/admin/login'
     | '/destinations/$slug'
+    | '/admin/'
     | '/destinations/'
     | '/booking/$ref/status'
   fileRoutesByTo: FileRoutesByTo
@@ -119,7 +139,9 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/packages'
     | '/stories'
+    | '/admin/login'
     | '/destinations/$slug'
+    | '/admin'
     | '/destinations'
     | '/booking/$ref/status'
   id:
@@ -130,7 +152,9 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/packages'
     | '/stories'
+    | '/admin/login'
     | '/destinations/$slug'
+    | '/admin/'
     | '/destinations/'
     | '/booking/$ref/status'
   fileRoutesById: FileRoutesById
@@ -142,7 +166,9 @@ export interface RootRouteChildren {
   GalleryRoute: typeof GalleryRoute
   PackagesRoute: typeof PackagesRoute
   StoriesRoute: typeof StoriesRoute
+  AdminLoginRoute: typeof AdminLoginRoute
   DestinationsSlugRoute: typeof DestinationsSlugRoute
+  AdminIndexRoute: typeof AdminIndexRoute
   DestinationsIndexRoute: typeof DestinationsIndexRoute
   BookingRefStatusRoute: typeof BookingRefStatusRoute
 }
@@ -198,11 +224,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DestinationsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/destinations/$slug': {
       id: '/destinations/$slug'
       path: '/destinations/$slug'
       fullPath: '/destinations/$slug'
       preLoaderRoute: typeof DestinationsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/admin/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/booking/$ref/status': {
@@ -222,7 +262,9 @@ const rootRouteChildren: RootRouteChildren = {
   GalleryRoute: GalleryRoute,
   PackagesRoute: PackagesRoute,
   StoriesRoute: StoriesRoute,
+  AdminLoginRoute: AdminLoginRoute,
   DestinationsSlugRoute: DestinationsSlugRoute,
+  AdminIndexRoute: AdminIndexRoute,
   DestinationsIndexRoute: DestinationsIndexRoute,
   BookingRefStatusRoute: BookingRefStatusRoute,
 }
