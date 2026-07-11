@@ -22,10 +22,10 @@ type Draft = {
   travellerName: string;
   travellerAvatarKey?: string;
   travellerAvatarUrl?: string | null;
-  tripLabel?: string;
+  tripLabel?: string | null;
   coverImageKey?: string;
-  coverImageUrl?: string;
-  rating?: string;
+  coverImageUrl?: string | null;
+  rating?: string | null;
   isActive: boolean;
   sortOrder: number;
 };
