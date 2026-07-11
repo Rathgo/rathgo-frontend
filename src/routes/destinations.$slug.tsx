@@ -778,6 +778,6 @@ function StepFour({ booking, onBack }: { booking: Booking; onBack: () => void })
   );
 }
 
-// keep imports referenced (silences unused warnings for optional icons/types)
-void User; void Users; void SharingType satisfies unknown as never;
-export type { SharingKind };
+// keep optional icon imports referenced
+void User; void Users;
+export type { SharingKind, SharingType };
