@@ -1,12 +1,25 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { Star, Calendar, Users } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { destinations } from "@/lib/destinations";
+import { LoadingBlock, ErrorBlock } from "@/components/query-status";
+import { apiFetch } from "@/lib/api";
+import type { Trip } from "@/lib/types";
+import { z } from "zod";
+import { zodValidator } from "@tanstack/zod-adapter";
 import heroImg from "@/assets/hero-manali.jpg";
+
+const searchSchema = z.object({
+  state: z.string().optional(),
+  travelType: z.enum(["solo", "group", "both"]).optional(),
+  minPrice: z.coerce.number().optional(),
+  maxPrice: z.coerce.number().optional(),
+});
 
 export const Route = createFileRoute("/destinations/")({
   component: DestinationsIndex,
+  validateSearch: zodValidator(searchSchema),
   head: () => ({
     meta: [
       { title: "Destinations — RATHGO Himalayan Batch Trips" },
@@ -16,11 +29,22 @@ export const Route = createFileRoute("/destinations/")({
 });
 
 function DestinationsIndex() {
+  const search = Route.useSearch();
+  const params = new URLSearchParams({ all: "true" });
+  if (search.state) params.set("state", search.state);
+  if (search.travelType) params.set("travelType", search.travelType);
+  if (search.minPrice) params.set("minPrice", String(search.minPrice));
+  if (search.maxPrice) params.set("maxPrice", String(search.maxPrice));
+
+  const trips = useQuery({
+    queryKey: ["trips", "all", search],
+    queryFn: () => apiFetch<Trip[]>(`/api/trips?${params.toString()}`),
+  });
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader transparent />
 
-      {/* Hero */}
       <section className="relative">
         <div className="relative h-[60vh] min-h-[420px] rounded-b-3xl overflow-hidden">
           <img src={heroImg} alt="" className="absolute inset-0 h-full w-full object-cover" />
@@ -48,49 +72,59 @@ function DestinationsIndex() {
               </p>
             </div>
 
-            <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {destinations.map((d) => (
-                <div key={d.slug} className="surface-card overflow-hidden bg-surface-2/60 flex flex-col">
-                  <div className="relative aspect-[4/3] overflow-hidden">
-                    <img src={d.image} alt={d.name} loading="lazy" className="h-full w-full object-cover" />
-                    <span className="absolute right-4 top-4 rounded-full bg-brand px-3 py-1 text-[10px] text-brand-foreground flex items-center gap-1">
-                      {[...Array(5)].map((_, i) => <Star key={i} className="h-3 w-3 fill-current" />)}
-                    </span>
-                  </div>
-                  <div className="p-5 flex-1 flex flex-col">
-                    <p className="eyebrow">{d.state}</p>
-                    <h3 className="mt-1 font-display text-2xl font-black uppercase">{d.name}</h3>
-                    <p className="mt-2 text-sm text-muted-foreground">{d.description}</p>
-
-                    <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
-                      <div>
-                        <p className="text-xs text-muted-foreground flex items-center gap-1"><Calendar className="h-3 w-3" /> {d.days}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-muted-foreground">Starting from</p>
-                        <p className="font-bold">₹{d.price.toLocaleString("en-IN")}</p>
-                      </div>
+            {trips.isLoading && <LoadingBlock label="Loading trips..." />}
+            {trips.isError && <ErrorBlock error={trips.error} onRetry={() => trips.refetch()} />}
+            {trips.data && trips.data.length === 0 && (
+              <p className="mt-10 text-center text-muted-foreground text-sm">No trips match your filters.</p>
+            )}
+            {trips.data && trips.data.length > 0 && (
+              <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {trips.data.map((d) => (
+                  <div key={d.slug} className="surface-card overflow-hidden bg-surface-2/60 flex flex-col">
+                    <div className="relative aspect-[4/3] overflow-hidden bg-surface-2">
+                      {d.images[0] && (
+                        <img src={d.images[0].imageUrl} alt={d.title} loading="lazy" className="h-full w-full object-cover" />
+                      )}
+                      <span className="absolute right-4 top-4 rounded-full bg-brand px-3 py-1 text-[10px] text-brand-foreground flex items-center gap-1">
+                        <Star className="h-3 w-3 fill-current" /> {d.rating}
+                      </span>
                     </div>
+                    <div className="p-5 flex-1 flex flex-col">
+                      <p className="eyebrow">{d.state}</p>
+                      <h3 className="mt-1 font-display text-2xl font-black uppercase">{d.title}</h3>
+                      <p className="mt-2 text-sm text-muted-foreground">{d.shortDescription}</p>
 
-                    <div className="mt-4 flex items-center justify-between">
-                      <span className="chip"><Users className="h-3 w-3" /> {d.type}</span>
-                      <span className="flex items-center gap-1 text-xs"><Star className="h-3 w-3 fill-brand text-brand" /> {d.rating}</span>
+                      <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+                        <div>
+                          <p className="text-xs text-muted-foreground flex items-center gap-1">
+                            <Calendar className="h-3 w-3" /> {d.days} Days / {d.nights} Nights
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-muted-foreground">Starting from</p>
+                          <p className="font-bold">₹{Number(d.startingPrice).toLocaleString("en-IN")}</p>
+                        </div>
+                      </div>
+
+                      <div className="mt-4 flex items-center justify-between">
+                        <span className="chip capitalize"><Users className="h-3 w-3" /> {d.travelType}</span>
+                        <span className="flex items-center gap-1 text-xs"><Star className="h-3 w-3 fill-brand text-brand" /> {d.rating}</span>
+                      </div>
+
+                      <Link
+                        to="/destinations/$slug"
+                        params={{ slug: d.slug }}
+                        className="btn-brand mt-5 w-full"
+                      >
+                        View Details
+                      </Link>
                     </div>
-
-                    <Link
-                      to="/destinations/$slug"
-                      params={{ slug: d.slug }}
-                      className="btn-brand mt-5 w-full"
-                    >
-                      View Details
-                    </Link>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* CTA */}
           <div className="mt-10 rounded-3xl bg-brand text-brand-foreground p-8 md:p-12 grid gap-6 md:grid-cols-[1fr_auto] items-center">
             <div>
               <h3 className="font-display text-3xl md:text-4xl font-black uppercase">Can't Decide? Let Us Help You Pick!</h3>

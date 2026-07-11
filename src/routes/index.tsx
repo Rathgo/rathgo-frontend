@@ -1,8 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { Star, ArrowRight } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { destinations } from "@/lib/destinations";
+import { LoadingBlock, ErrorBlock } from "@/components/query-status";
+import { apiFetch } from "@/lib/api";
+import type { Trip } from "@/lib/types";
 import heroImg from "@/assets/hero-mountains.jpg";
 import g1 from "@/assets/gallery-1.jpg";
 import g2 from "@/assets/gallery-2.jpg";
@@ -22,11 +25,15 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
+  const trips = useQuery({
+    queryKey: ["trips", "featured"],
+    queryFn: () => apiFetch<Trip[]>("/api/trips"),
+  });
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader transparent />
 
-      {/* Hero */}
       <section className="relative min-h-[92vh] flex items-center justify-center">
         <img src={heroImg} alt="" className="absolute inset-0 h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-background" />
@@ -44,7 +51,6 @@ function Home() {
         </div>
       </section>
 
-      {/* Popular Destinations */}
       <section className="py-20 md:py-28">
         <div className="container-page">
           <div className="text-center max-w-2xl mx-auto">
@@ -55,28 +61,42 @@ function Home() {
             </p>
           </div>
 
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {destinations.map((d) => (
-              <Link
-                to="/destinations/$slug"
-                params={{ slug: d.slug }}
-                key={d.slug}
-                className="group surface-card overflow-hidden relative"
-              >
-                <div className="relative aspect-[4/5] overflow-hidden">
-                  <img src={d.image} alt={d.name} loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
-                  <span className="absolute right-4 top-4 rounded-full bg-brand px-3 py-1 text-[10px] text-brand-foreground flex items-center gap-1">
-                    {[...Array(5)].map((_, i) => <Star key={i} className="h-3 w-3 fill-current" />)}
-                  </span>
-                </div>
-                <div className="p-6 relative -mt-16 mx-4 rounded-2xl bg-surface/95 backdrop-blur border border-border">
-                  <p className="eyebrow">{d.state}</p>
-                  <h3 className="mt-1 font-display text-2xl font-black uppercase">{d.name}</h3>
-                  <p className="mt-2 text-sm text-muted-foreground">{d.description}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
+          {trips.isLoading && <LoadingBlock label="Loading destinations..." />}
+          {trips.isError && <ErrorBlock error={trips.error} onRetry={() => trips.refetch()} />}
+          {trips.data && trips.data.length === 0 && (
+            <p className="mt-12 text-center text-muted-foreground text-sm">No destinations yet. Check back soon.</p>
+          )}
+          {trips.data && trips.data.length > 0 && (
+            <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {trips.data.map((d) => (
+                <Link
+                  to="/destinations/$slug"
+                  params={{ slug: d.slug }}
+                  key={d.slug}
+                  className="group surface-card overflow-hidden relative"
+                >
+                  <div className="relative aspect-[4/5] overflow-hidden bg-surface-2">
+                    {d.images[0] && (
+                      <img
+                        src={d.images[0].imageUrl}
+                        alt={d.images[0].altText ?? d.title}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                      />
+                    )}
+                    <span className="absolute right-4 top-4 rounded-full bg-brand px-3 py-1 text-[10px] text-brand-foreground flex items-center gap-1">
+                      <Star className="h-3 w-3 fill-current" /> {d.rating}
+                    </span>
+                  </div>
+                  <div className="p-6 relative -mt-16 mx-4 rounded-2xl bg-surface/95 backdrop-blur border border-border">
+                    <p className="eyebrow">{d.state}</p>
+                    <h3 className="mt-1 font-display text-2xl font-black uppercase">{d.title}</h3>
+                    <p className="mt-2 text-sm text-muted-foreground">{d.shortDescription}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
 
           <div className="mt-10 text-center">
             <Link to="/destinations" className="btn-brand">Explore All Destinations</Link>
@@ -84,7 +104,6 @@ function Home() {
         </div>
       </section>
 
-      {/* Stories / Photo Gallery */}
       <section className="py-16 md:py-24">
         <div className="container-page">
           <div className="text-center max-w-2xl mx-auto">
@@ -109,19 +128,16 @@ function Home() {
         </div>
       </section>
 
-      {/* CTA */}
       <section className="py-10">
         <div className="container-page">
           <div className="rounded-3xl bg-brand text-brand-foreground p-8 md:p-14 grid gap-6 md:grid-cols-[1fr_auto] items-end">
             <div>
-              <h2 className="font-display text-3xl sm:text-5xl font-black uppercase leading-tight max-w-2xl">
-                Ready for an Unforgettable Journey? Remember Us!
-              </h2>
-              <p className="mt-4 text-sm md:text-base text-brand-foreground/85 max-w-xl">
-                Book your next batch trip with RATHGO and travel together with new friends. Solo or couple, adventure awaits in every direction.
+              <h2 className="font-display text-3xl md:text-5xl font-black uppercase">Ready for Your Next Adventure?</h2>
+              <p className="mt-3 text-sm md:text-base text-brand-foreground/85 max-w-xl">
+                Join a batch. Meet strangers. Come back with stories worth telling.
               </p>
             </div>
-            <Link to="/contact" className="btn-ghost-pill !border-white/50 !text-white hover:!bg-white/10">Contact Us</Link>
+            <Link to="/destinations" className="btn-ghost-pill !border-white/60 !text-white hover:!bg-white/10">Explore Destinations</Link>
           </div>
         </div>
       </section>
