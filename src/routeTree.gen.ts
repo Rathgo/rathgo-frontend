@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as StoriesRouteImport } from './routes/stories'
-import { Route as PackagesRouteImport } from './routes/packages'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AboutRouteImport } from './routes/about'
@@ -32,11 +31,6 @@ import { Route as AdminBookingsIdRouteImport } from './routes/admin.bookings.$id
 const StoriesRoute = StoriesRouteImport.update({
   id: '/stories',
   path: '/stories',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PackagesRoute = PackagesRouteImport.update({
-  id: '/packages',
-  path: '/packages',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GalleryRoute = GalleryRouteImport.update({
@@ -130,7 +124,6 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/gallery': typeof GalleryRoute
-  '/packages': typeof PackagesRoute
   '/stories': typeof StoriesRoute
   '/admin/coupons': typeof AdminCouponsRoute
   '/admin/login': typeof AdminLoginRoute
@@ -151,7 +144,6 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/gallery': typeof GalleryRoute
-  '/packages': typeof PackagesRoute
   '/stories': typeof StoriesRoute
   '/admin/coupons': typeof AdminCouponsRoute
   '/admin/login': typeof AdminLoginRoute
@@ -173,7 +165,6 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/gallery': typeof GalleryRoute
-  '/packages': typeof PackagesRoute
   '/stories': typeof StoriesRoute
   '/admin/coupons': typeof AdminCouponsRoute
   '/admin/login': typeof AdminLoginRoute
@@ -196,7 +187,6 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/gallery'
-    | '/packages'
     | '/stories'
     | '/admin/coupons'
     | '/admin/login'
@@ -217,7 +207,6 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/gallery'
-    | '/packages'
     | '/stories'
     | '/admin/coupons'
     | '/admin/login'
@@ -238,7 +227,6 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/gallery'
-    | '/packages'
     | '/stories'
     | '/admin/coupons'
     | '/admin/login'
@@ -260,7 +248,6 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
   GalleryRoute: typeof GalleryRoute
-  PackagesRoute: typeof PackagesRoute
   StoriesRoute: typeof StoriesRoute
   AdminCouponsRoute: typeof AdminCouponsRoute
   AdminLoginRoute: typeof AdminLoginRoute
@@ -284,13 +271,6 @@ declare module '@tanstack/react-router' {
       path: '/stories'
       fullPath: '/stories'
       preLoaderRoute: typeof StoriesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/packages': {
-      id: '/packages'
-      path: '/packages'
-      fullPath: '/packages'
-      preLoaderRoute: typeof PackagesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/gallery': {
@@ -420,7 +400,6 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
   GalleryRoute: GalleryRoute,
-  PackagesRoute: PackagesRoute,
   StoriesRoute: StoriesRoute,
   AdminCouponsRoute: AdminCouponsRoute,
   AdminLoginRoute: AdminLoginRoute,
