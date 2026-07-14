@@ -16,7 +16,7 @@ import {
   createBooking, patchMembers, uploadAadhar, applyCoupon,
   checkoutBooking, useLocalBooking, sharingLabel,
 } from "@/lib/booking-flow";
-import { openCashfree } from "@/lib/cashfree";
+import { openRazorpay } from "@/lib/razorpay";
 import fallbackImg from "@/assets/hero-manali.jpg";
 
 const search = z.object({ ref: z.string().optional(), step: z.coerce.number().optional() });
@@ -713,9 +713,10 @@ function StepFour({ booking, onBack }: { booking: Booking; onBack: () => void })
   const pay = async () => {
     setPaying(true); setPayError(null);
     try {
-      const { paymentSessionId } = await checkoutBooking(current.bookingRef);
-      const returnUrl = `${window.location.origin}/booking/${current.bookingRef}/status`;
-      await openCashfree(paymentSessionId, returnUrl);
+      const res = await checkoutBooking(current.bookingRef);
+      await openRazorpay(res, () => {
+        window.location.href = `/booking/${current.bookingRef}/status`;
+      });
     } catch (e) {
       setPayError(e instanceof ApiError ? e.message : "Payment failed to start");
       setPaying(false);

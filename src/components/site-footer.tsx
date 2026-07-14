@@ -1,12 +1,21 @@
 import { Link } from "@tanstack/react-router";
 import { Phone, Mail, MapPin } from "lucide-react";
+import ctsLogo from "@/assets/cts-logo.jpg.asset.json";
 
 export function SiteFooter() {
   return (
     <footer className="border-t border-border bg-background">
       <div className="container-page py-14 grid gap-10 md:grid-cols-3">
         <div>
-          <p className="font-display text-3xl font-black tracking-[0.15em]">RATHGO</p>
+          <div className="flex items-center gap-3">
+            <img src={ctsLogo.url} alt="CTS" className="h-12 w-auto rounded bg-white p-1" />
+            <div className="leading-none">
+              <p className="font-display text-3xl font-black tracking-[0.15em]">RATHGO</p>
+              <p className="mt-1 text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                A unit of Chetan Tours Solution
+              </p>
+            </div>
+          </div>
           <p className="mt-4 text-sm text-muted-foreground max-w-sm">
             Curated batch trips across the Himalayas for solo travellers and couples. Meet new people, share the road,
             and create memories that last a lifetime.
@@ -43,7 +52,7 @@ export function SiteFooter() {
       </div>
       <div className="border-t border-border">
         <div className="container-page py-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
-          <p>© 2026 RATHGO. All rights reserved</p>
+          <p>© 2026 Rathgo, a unit of Chetan Tours Solution. All rights reserved.</p>
           <div className="flex items-center gap-5">
             <Link to="/" className="hover:text-foreground">Privacy Policy</Link>
             <Link to="/" className="hover:text-foreground">Term & Condition</Link>
