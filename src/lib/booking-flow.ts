@@ -84,10 +84,14 @@ export async function applyCoupon(ref: string, code: string): Promise<Booking> {
 }
 
 export async function checkoutBooking(ref: string): Promise<{
-  orderId: string;
-  paymentSessionId: string;
-  totalAmount: number;
+  razorpayOrderId: string;
+  keyId: string;
+  amountInPaise: number;
+  currency: string;
   bookingRef: string;
+  prefillName?: string;
+  prefillEmail?: string;
+  prefillPhone?: string;
 }> {
   return apiFetch(`/api/bookings/${ref}/checkout`, { method: "POST" });
 }
