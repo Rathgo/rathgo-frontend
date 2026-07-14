@@ -2,6 +2,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { Phone, Search, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { ThemeToggle } from "./theme-toggle";
+import ctsLogo from "@/assets/cts-logo.jpg.asset.json";
 
 const nav = [
   { label: "Home", to: "/" },
@@ -38,9 +39,20 @@ export function SiteHeader({ transparent = false }: { transparent?: boolean }) {
           {/* Center: logo */}
           <Link
             to="/"
-            className="justify-self-center font-display text-2xl md:text-3xl font-black tracking-[0.15em]"
+            className="justify-self-center flex items-center gap-3 min-w-0"
+            aria-label="Rathgo — a unit of Chetan Tours Solution"
           >
-            RATHGO
+            <img
+              src={ctsLogo.url}
+              alt="CTS"
+              className="h-9 md:h-11 w-auto shrink-0 rounded bg-white p-1 dark:bg-white"
+            />
+            <span className="flex flex-col leading-none">
+              <span className="font-display text-2xl md:text-3xl font-black tracking-[0.15em]">RATHGO</span>
+              <span className="mt-1 text-[9px] md:text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                A unit of Chetan Tours Solution
+              </span>
+            </span>
           </Link>
 
           {/* Right: actions */}
