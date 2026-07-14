@@ -107,23 +107,23 @@ function Home() {
       <section className="py-16 md:py-24">
         <div className="container-page">
           <div className="text-center max-w-2xl mx-auto">
-            <span className="eyebrow">Photo Gallery</span>
-            <h2 className="mt-3 font-display text-4xl md:text-5xl font-black uppercase">Stories from Travellers</h2>
-            <p className="mt-4 text-muted-foreground text-sm md:text-base">
-              Real moments from our batch trips. Solo travellers and couples who became friends and explored the Himalayas together with RATHGO.
-            </p>
+            <span className="eyebrow">Moments</span>
+            <h2 className="mt-3 font-display text-4xl md:text-5xl font-black uppercase">Photo Gallery</h2>
           </div>
 
           <div className="mt-10 grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-            <img src={g1} alt="" loading="lazy" className="aspect-square w-full rounded-2xl object-cover" />
-            <img src={g3} alt="" loading="lazy" className="col-span-2 md:col-span-1 md:row-span-2 aspect-square md:aspect-[3/4] w-full rounded-2xl object-cover" />
-            <img src={g5} alt="" loading="lazy" className="aspect-square w-full rounded-2xl object-cover" />
-            <img src={g2} alt="" loading="lazy" className="aspect-square w-full rounded-2xl object-cover" />
-            <img src={g4} alt="" loading="lazy" className="hidden md:block aspect-square w-full rounded-2xl object-cover" />
-            <img src={g6} alt="" loading="lazy" className="aspect-square w-full rounded-2xl object-cover" />
+            {[g1, g2, g3, g4, g5, g6].map((src, i) => (
+              <img
+                key={i}
+                src={src}
+                alt=""
+                loading="lazy"
+                className="aspect-square w-full rounded-2xl object-cover"
+              />
+            ))}
           </div>
           <div className="mt-8 text-center">
-            <Link to="/stories" className="btn-ghost-pill">Read All Stories <ArrowRight className="h-3 w-3" /></Link>
+            <Link to="/stories" className="btn-brand">Read All Stories <ArrowRight className="h-3 w-3" /></Link>
           </div>
         </div>
       </section>

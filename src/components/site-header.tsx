@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Phone, Search, Menu, X } from "lucide-react";
+import { Phone, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { ThemeToggle } from "./theme-toggle";
 import ctsLogo from "@/assets/cts-logo.jpg.asset.json";
@@ -8,7 +8,7 @@ const nav = [
   { label: "Home", to: "/" },
   { label: "About Us", to: "/about" },
   { label: "Destinations", to: "/destinations" },
-  { label: "Gallery", to: "/gallery" },
+  { label: "Stories", to: "/stories" },
   { label: "Contact Us", to: "/contact" },
 ];
 
@@ -32,7 +32,7 @@ export function SiteHeader({ transparent = false }: { transparent?: boolean }) {
             </span>
             <div className="hidden sm:block min-w-0">
               <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">For Further Inquiries</p>
-              <p className="text-sm font-semibold truncate">+91 98765 43210</p>
+              <p className="text-sm font-semibold truncate text-foreground">+91 98765 43210</p>
             </div>
           </div>
 
@@ -45,11 +45,11 @@ export function SiteHeader({ transparent = false }: { transparent?: boolean }) {
             <img
               src={ctsLogo.url}
               alt="CTS"
-              className="h-9 md:h-11 w-auto shrink-0 rounded bg-white p-1 dark:bg-white"
+              className="h-9 md:h-11 w-auto shrink-0 rounded bg-white p-1"
             />
             <span className="flex flex-col leading-none">
-              <span className="font-display text-2xl md:text-3xl font-black tracking-[0.15em]">RATHGO</span>
-              <span className="mt-1 text-[9px] md:text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+              <span className="font-display text-2xl md:text-3xl font-black tracking-[0.15em] text-foreground">RATHGO</span>
+              <span className="mt-1 text-[9px] md:text-[10px] uppercase tracking-[0.18em] text-foreground/70">
                 A unit of Chetan Tours Solution
               </span>
             </span>
@@ -57,12 +57,6 @@ export function SiteHeader({ transparent = false }: { transparent?: boolean }) {
 
           {/* Right: actions */}
           <div className="flex items-center gap-2">
-            <button
-              aria-label="Search"
-              className="hidden md:inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-surface/60 hover:bg-surface"
-            >
-              <Search className="h-4 w-4" />
-            </button>
             <ThemeToggle />
             <Link to="/destinations" className="btn-brand !py-2 !px-4 hidden sm:inline-flex">
               Book Now
