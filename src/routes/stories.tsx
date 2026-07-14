@@ -39,15 +39,15 @@ function Stories() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <SiteHeader transparent />
+      <SiteHeader />
 
       <section className="relative">
-        <div className="relative h-[52vh] min-h-[380px] overflow-hidden">
+        <div className="relative min-h-[420px] overflow-hidden">
           <img src={heroImg} alt="" className="absolute inset-0 h-full w-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-background" />
-          <div className="container-page relative z-10 h-full flex flex-col justify-end pb-14 pt-24">
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-background" />
+          <div className="container-page relative z-10 flex flex-col justify-end pb-14 pt-44 md:pt-52">
             <span className="chip !bg-brand/20 !border-brand/40 !text-brand mb-4 w-fit">Real Experiences</span>
-            <h1 className="font-display text-5xl sm:text-7xl md:text-8xl font-black uppercase text-white">
+            <h1 className="font-display text-4xl sm:text-6xl md:text-7xl font-black uppercase text-white leading-[0.95]">
               Stories from Our Travellers
             </h1>
             <p className="mt-4 max-w-2xl text-white/80 text-sm md:text-base">
