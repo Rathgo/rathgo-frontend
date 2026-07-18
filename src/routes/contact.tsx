@@ -20,9 +20,9 @@ function Contact() {
             <h1 className="mt-2 font-display text-4xl md:text-5xl font-black uppercase">Let's Plan Your Trip</h1>
             <p className="mt-3 text-sm text-muted-foreground">Have a question or want a custom batch? Our team will get back within 24 hours.</p>
             <ul className="mt-6 space-y-3 text-sm">
-              <li className="flex items-center gap-2"><Phone className="h-4 w-4 text-brand" /> +91 98765 43210</li>
-              <li className="flex items-center gap-2"><Mail className="h-4 w-4 text-brand" /> info@rathgo.com</li>
-              <li className="flex items-center gap-2"><MapPin className="h-4 w-4 text-brand" /> Mall Road, Manali, Himachal Pradesh</li>
+              <li className="flex items-center gap-2"><Phone className="h-4 w-4 text-brand" /> +91 8750505497</li>
+              <li className="flex items-center gap-2"><Mail className="h-4 w-4 text-brand" /> rathgo.travel@gmail.com</li>
+              <li className="flex items-center gap-2"><MapPin className="h-4 w-4 text-brand" /> C-17/3, Shiv Shakti Apartment, Sector 71, Noida, Uttar Pradesh 201301</li>
             </ul>
           </div>
           <form onSubmit={(e) => e.preventDefault()} className="surface-card p-8 space-y-3">

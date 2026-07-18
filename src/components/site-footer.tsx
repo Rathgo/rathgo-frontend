@@ -26,7 +26,7 @@ export function SiteFooter() {
           <ul className="mt-4 space-y-3 text-sm">
             <li className="flex items-center gap-2 text-muted-foreground"><Phone className="h-4 w-4 text-brand" /> +91 8750505497</li>
             <li className="flex items-center gap-2 text-muted-foreground"><Mail className="h-4 w-4 text-brand" /> rathgo.travel@gmail.com</li>
-            <li className="flex items-center gap-2 text-muted-foreground"><MapPin className="h-4 w-4 text-brand" /> C-17/3, Shiv Shakti Apartment, Sector 71, Noida, Uttra Pradesh 201301</li>
+            <li className="flex items-center gap-2 text-muted-foreground"><MapPin className="h-4 w-4 text-brand" /> C-17/3, Shiv Shakti Apartment, Sector 71, Noida, Uttar Pradesh 201301</li>
           </ul>
           <div className="mt-6 flex gap-2 text-[11px] uppercase tracking-[0.2em]">
             <a href="#" className="chip">Instagram</a>
