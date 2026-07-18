@@ -54,14 +54,14 @@ function EditTrip() {
             trip={q.data}
             onRefresh={() => qc.invalidateQueries({ queryKey: ["admin", "trip", id] })}
             uploadImage={async (file) => {
-              const { uploadUrl, imageKey } = await adminFetch<{ uploadUrl: string; imageKey: string }>(
+              const { uploadUrl, key } = await adminFetch<{ uploadUrl: string; key: string }>(
                 `/api/admin/trips/${id}/images/upload-url`,
                 { method: "POST", body: JSON.stringify({ contentType: file.type }) },
               );
               await putSignedUpload(uploadUrl, file, file.type);
               await adminFetch(`/api/admin/trips/${id}/images`, {
                 method: "POST",
-                body: JSON.stringify({ imageKey, sortOrder: q.data!.images.length }),
+                body: JSON.stringify({ imageKey: key, sortOrder: q.data!.images.length }),
               });
             }}
             deleteImage={async (imgId) => {

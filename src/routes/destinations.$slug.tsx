@@ -150,7 +150,7 @@ function DestinationDetail() {
                       {excluded.map((i) => (
                         <div key={i.id} className="flex items-center gap-3 rounded-xl bg-surface-2 border border-border px-4 py-3">
                           <X className="h-4 w-4 text-destructive shrink-0" />
-                          <span className="text-sm text-muted-foreground line-through">{i.label}</span>
+                          <span className="text-sm text-muted-foreground">{i.label}</span>
                         </div>
                       ))}
                     </div>
@@ -277,7 +277,7 @@ function StepOne({ trip, onCreated }: { trip: Trip; onCreated: (b: Booking) => v
         sharingTypeId: sharingId,
         travelMode,
         groupSize: travelMode === "solo" ? 1 : groupSize,
-        referredById: referredById ? Number(referredById) : null,
+        referredById: referredById ? Number(referredById) : undefined,
         howHeard: howHeard || undefined,
       });
       onCreated(b);
@@ -485,6 +485,10 @@ function StepTwoSolo({ booking, onBack, onContinue, onEdit }: { booking: Booking
   };
 
   const submit = async () => {
+    if (!m.aadharFrontKey || !m.aadharBackKey) {
+      setError("Please upload both Aadhar images before continuing.");
+      return;
+    }
     setSaving(true); setError(null);
     try {
       await patchMembers(booking.bookingRef, [m]);
@@ -558,6 +562,10 @@ function StepThreeInner({ booking, onBack, onContinue, onEdit, title }: {
 
   const submit = async () => {
     if (!members.some((m) => m.isPrimary)) { setError("Mark one member as primary"); return; }
+    if (!members.every((m) => m.aadharFrontKey && m.aadharBackKey)) {
+      setError("Please upload both Aadhar images for every member before continuing.");
+      return;
+    }
     setSaving(true); setError(null);
     try {
       await patchMembers(booking.bookingRef, members);

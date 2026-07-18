@@ -2,7 +2,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { Phone, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { ThemeToggle } from "./theme-toggle";
-import ctsLogo from "@/assets/cts-logo.jpg.asset.json";
+import rathgoLogo from "@/assets/rathgo_logo.jpg";
 
 const nav = [
   { label: "Home", to: "/" },
@@ -32,7 +32,7 @@ export function SiteHeader({ transparent = false }: { transparent?: boolean }) {
             </span>
             <div className="hidden sm:block min-w-0">
               <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">For Further Inquiries</p>
-              <p className="text-sm font-semibold truncate text-foreground">+91 98765 43210</p>
+              <p className="text-sm font-semibold truncate text-foreground">+91 8750505497</p>
             </div>
           </div>
 
@@ -43,8 +43,8 @@ export function SiteHeader({ transparent = false }: { transparent?: boolean }) {
             aria-label="Rathgo — a unit of Chetan Tours Solution"
           >
             <img
-              src={ctsLogo.url}
-              alt="CTS"
+              src={rathgoLogo}
+              alt="Rathgo"
               className="h-9 md:h-11 w-auto shrink-0 rounded bg-white p-1"
             />
             <span className="flex flex-col leading-none">

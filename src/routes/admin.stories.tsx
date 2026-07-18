@@ -58,7 +58,20 @@ function StoriesAdmin() {
     if (!editing.id && !editing.coverImageKey) { alert("Cover image required"); return; }
     setSaving(true);
     try {
-      const body = { ...editing };
+      const body: any = {
+        title: editing.title,
+        content: editing.content,
+        category: editing.category,
+        travellerName: editing.travellerName,
+        travellerAvatarKey: editing.travellerAvatarKey,
+        coverImageKey: editing.coverImageKey,
+        // backend expects numbers for rating and sortOrder; ensure correct types
+        rating: editing.rating !== undefined && editing.rating !== null && editing.rating !== "" ? Number(editing.rating) : undefined,
+        sortOrder: editing.sortOrder !== undefined ? Number(editing.sortOrder) : undefined,
+        isActive: !!editing.isActive,
+        // tripLabel is optional string
+        tripLabel: editing.tripLabel ? editing.tripLabel : undefined,
+      };
       if (editing.id) await adminFetch(`/api/admin/stories/${editing.id}`, { method: "PUT", body: JSON.stringify(body) });
       else await adminFetch("/api/admin/stories", { method: "POST", body: JSON.stringify(body) });
       setEditing(null); refresh();

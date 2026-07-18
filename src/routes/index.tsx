@@ -39,10 +39,10 @@ function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-background" />
         <div className="container-page relative z-10 text-center pt-32 pb-24">
           <h1 className="font-display text-5xl sm:text-7xl md:text-8xl font-black uppercase tracking-tight text-white leading-[0.95] max-w-4xl mx-auto">
-            Travel Together, Never Alone
+            One Stop Solution for Travel
           </h1>
           <p className="mt-6 max-w-2xl mx-auto text-base sm:text-lg text-white/80">
-            Join curated batch trips across the Himalayas. Whether you travel solo or as a couple, meet like-minded explorers and make memories that last a lifetime.
+            Celebrate your holidays at the stunning and tranquil hill stations of India.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link to="/destinations" className="btn-brand">Learn More</Link>

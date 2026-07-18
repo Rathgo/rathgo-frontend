@@ -198,9 +198,25 @@ function SharingEditor({ trip, onRefresh }: { trip: Trip; onRefresh: () => void 
   );
   const [saving, setSaving] = useState(false);
   const save = async () => {
+    const payload = items.map((item) => ({
+      ...item,
+      price: Number(item.price),
+      description: item.description?.trim() || undefined,
+    }));
+
+    for (const item of payload) {
+      if (!Number.isFinite(item.price) || item.price <= 0) {
+        alert(`Price for ${item.kind} must be a number greater than 0.`);
+        return;
+      }
+    }
+
     setSaving(true);
     try {
-      await adminFetch(`/api/admin/trips/${trip.id}/sharing-types`, { method: "PUT", body: JSON.stringify({ items }) });
+      await adminFetch(`/api/admin/trips/${trip.id}/sharing-types`, {
+        method: "PUT",
+        body: JSON.stringify({ items: payload }),
+      });
       onRefresh();
     } catch (e) { alert(e instanceof ApiError ? e.message : "Save failed"); }
     finally { setSaving(false); }

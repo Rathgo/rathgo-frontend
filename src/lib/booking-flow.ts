@@ -44,7 +44,7 @@ export async function createBooking(input: {
   sharingTypeId: number;
   travelMode: TravelMode;
   groupSize: number;
-  referredById?: number | null;
+  referredById?: number;
   howHeard?: string;
 }): Promise<Booking> {
   const b = await apiFetch<Booking>("/api/bookings", {

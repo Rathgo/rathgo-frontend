@@ -25,9 +25,18 @@ function NewTrip() {
         onSubmit={async (values) => {
           setSaving(true); setError(null);
           try {
+            const payload = {
+              ...values,
+              days: Number(values.days),
+              nights: Number(values.nights),
+              startingPrice: Number(values.startingPrice),
+              rating: values.rating ? Number(values.rating) : undefined,
+              isActive: Boolean(values.isActive),
+            };
+
             const trip = await adminFetch<Trip>("/api/admin/trips", {
               method: "POST",
-              body: JSON.stringify(values),
+              body: JSON.stringify(payload),
             });
             navigate({ to: "/admin/trips/$id", params: { id: String(trip.id) } });
           } catch (e) {

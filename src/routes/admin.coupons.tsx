@@ -52,9 +52,27 @@ function CouponsAdmin() {
 
   const save = async () => {
     if (!editing) return;
+
+    const discountValue = Number(editing.discountValue);
+    if (!Number.isFinite(discountValue) || discountValue <= 0) {
+      alert("Discount value must be a number greater than 0.");
+      return;
+    }
+
+    const body = {
+      code: editing.code.trim().toUpperCase(),
+      discountKind: editing.discountKind,
+      discountValue,
+      maxDiscount: editing.maxDiscount ? Number(editing.maxDiscount) : undefined,
+      minAmount: editing.minAmount ? Number(editing.minAmount) : undefined,
+      usageLimit: editing.usageLimit ?? undefined,
+      validFrom: editing.validFrom ? editing.validFrom : undefined,
+      validTo: editing.validTo ? editing.validTo : undefined,
+      isActive: editing.isActive,
+    };
+
     setSaving(true);
     try {
-      const body = { ...editing };
       if (editing.id) {
         await adminFetch(`/api/admin/coupons/${editing.id}`, { method: "PUT", body: JSON.stringify(body) });
       } else {
