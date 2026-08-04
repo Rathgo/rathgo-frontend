@@ -8,6 +8,7 @@ import { TripSubEditors } from "@/components/admin-trip-sub-editors";
 import { adminFetch } from "@/lib/admin-auth";
 import { ApiError, putSignedUpload } from "@/lib/api";
 import type { Trip } from "@/lib/types";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/trips/$id")({
   component: EditTrip,
@@ -44,6 +45,7 @@ function EditTrip() {
                 });
                 qc.invalidateQueries({ queryKey: ["admin", "trip", id] });
                 qc.invalidateQueries({ queryKey: ["admin", "trips"] });
+                toast.success("Trip saved");
               } catch (e) {
                 setError(e instanceof ApiError ? e.message : "Save failed");
               } finally { setSaving(false); }

@@ -8,6 +8,7 @@ import { adminFetch } from "@/lib/admin-auth";
 import { ApiError, putSignedUpload } from "@/lib/api";
 import type { Story, StoryCategory } from "@/lib/types";
 import { Plus, Trash2, Loader2, Upload } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/stories")({
   component: StoriesAdmin,
@@ -55,7 +56,7 @@ function StoriesAdmin() {
 
   const save = async () => {
     if (!editing) return;
-    if (!editing.id && !editing.coverImageKey) { alert("Cover image required"); return; }
+    if (!editing.id && !editing.coverImageKey) { toast.error("Cover image required"); return; }
     setSaving(true);
     try {
       const body: any = {
@@ -74,8 +75,9 @@ function StoriesAdmin() {
       };
       if (editing.id) await adminFetch(`/api/admin/stories/${editing.id}`, { method: "PUT", body: JSON.stringify(body) });
       else await adminFetch("/api/admin/stories", { method: "POST", body: JSON.stringify(body) });
+      toast.success(editing.id ? "Story updated" : "Story created");
       setEditing(null); refresh();
-    } catch (e) { alert(e instanceof ApiError ? e.message : "Save failed"); }
+    } catch (e) { toast.error(e instanceof ApiError ? e.message : "Save failed"); }
     finally { setSaving(false); }
   };
 

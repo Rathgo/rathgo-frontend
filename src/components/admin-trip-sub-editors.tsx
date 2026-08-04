@@ -4,6 +4,7 @@ import type { Trip, InclusionKind, SharingKind } from "@/lib/types";
 import { adminFetch } from "@/lib/admin-auth";
 import { ApiError } from "@/lib/api";
 import { Input, Label } from "./admin-trip-form";
+import { toast } from "sonner";
 
 export function TripSubEditors({
   trip, onRefresh, uploadImage, deleteImage,
@@ -63,8 +64,9 @@ function FeaturedEditor({ trip, onRefresh }: { trip: Trip; onRefresh: () => void
                 method: "PUT",
                 body: JSON.stringify({ isFeatured: featured, featuredOrder: featured ? order : null }),
               });
+              toast.success("Featured settings saved");
               onRefresh();
-            } catch (e) { alert(e instanceof ApiError ? e.message : "Save failed"); }
+            } catch (e) { toast.error(e instanceof ApiError ? e.message : "Save failed"); }
             finally { setSaving(false); }
           }}
           className="btn-brand !py-2 disabled:opacity-60"
@@ -120,8 +122,9 @@ function ItineraryEditor({ trip, onRefresh }: { trip: Trip; onRefresh: () => voi
     setSaving(true);
     try {
       await adminFetch(`/api/admin/trips/${trip.id}/itinerary`, { method: "PUT", body: JSON.stringify({ days }) });
+      toast.success("Itinerary saved");
       onRefresh();
-    } catch (e) { alert(e instanceof ApiError ? e.message : "Save failed"); }
+    } catch (e) { toast.error(e instanceof ApiError ? e.message : "Save failed"); }
     finally { setSaving(false); }
   };
 
@@ -161,8 +164,9 @@ function InclusionsEditor({ trip, onRefresh }: { trip: Trip; onRefresh: () => vo
     setSaving(true);
     try {
       await adminFetch(`/api/admin/trips/${trip.id}/inclusions`, { method: "PUT", body: JSON.stringify({ items }) });
+      toast.success("Inclusions saved");
       onRefresh();
-    } catch (e) { alert(e instanceof ApiError ? e.message : "Save failed"); }
+    } catch (e) { toast.error(e instanceof ApiError ? e.message : "Save failed"); }
     finally { setSaving(false); }
   };
   return (
@@ -206,7 +210,7 @@ function SharingEditor({ trip, onRefresh }: { trip: Trip; onRefresh: () => void 
 
     for (const item of payload) {
       if (!Number.isFinite(item.price) || item.price <= 0) {
-        alert(`Price for ${item.kind} must be a number greater than 0.`);
+        toast.error(`Price for ${item.kind} must be a number greater than 0.`);
         return;
       }
     }
@@ -217,8 +221,9 @@ function SharingEditor({ trip, onRefresh }: { trip: Trip; onRefresh: () => void 
         method: "PUT",
         body: JSON.stringify({ items: payload }),
       });
+      toast.success("Room sharing prices saved");
       onRefresh();
-    } catch (e) { alert(e instanceof ApiError ? e.message : "Save failed"); }
+    } catch (e) { toast.error(e instanceof ApiError ? e.message : "Save failed"); }
     finally { setSaving(false); }
   };
   return (
@@ -272,7 +277,7 @@ function BatchesEditor({ trip, onRefresh }: { trip: Trip; onRefresh: () => void 
     try {
       await adminFetch(`/api/admin/batches/${b.id}`, { method: "DELETE" });
       onRefresh();
-    } catch (e) { alert(e instanceof ApiError ? e.message : "Delete failed"); }
+    } catch (e) { toast.error(e instanceof ApiError ? e.message : "Delete failed"); }
     finally { setBusy(false); }
   };
 
