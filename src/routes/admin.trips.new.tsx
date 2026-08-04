@@ -5,6 +5,7 @@ import { adminFetch } from "@/lib/admin-auth";
 import type { Trip } from "@/lib/types";
 import { ApiError } from "@/lib/api";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/trips/new")({
   component: NewTrip,
@@ -38,6 +39,7 @@ function NewTrip() {
               method: "POST",
               body: JSON.stringify(payload),
             });
+            toast.success("Trip created");
             navigate({ to: "/admin/trips/$id", params: { id: String(trip.id) } });
           } catch (e) {
             setError(e instanceof ApiError ? e.message : "Save failed");

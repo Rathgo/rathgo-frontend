@@ -82,24 +82,32 @@ function DestinationDetail() {
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader transparent />
 
-      <section className="relative h-[50vh] min-h-[380px]">
+      <section className="relative min-h-[520px] md:min-h-[560px]">
         <img src={heroSrc} alt="" className="absolute inset-0 h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-background" />
-        <div className="container-page relative z-10 h-full flex flex-col justify-end pb-8 pt-28">
+        <div className="container-page relative z-10 flex min-h-[520px] flex-col justify-end pb-10 pt-40 md:min-h-[560px] md:pt-48">
           <div className="text-xs text-white/70 flex items-center gap-2">
             <Link to="/" className="hover:text-white">Home</Link> <ChevronRight className="h-3 w-3" />
             <Link to="/destinations" className="hover:text-white">Destination</Link> <ChevronRight className="h-3 w-3" />
             <span className="text-white">{trip.title}</span>
           </div>
-          <h1 className="mt-4 font-display text-5xl sm:text-7xl md:text-8xl font-black uppercase text-white leading-none">
+          <h1 className="mt-4 font-display text-4xl sm:text-5xl md:text-6xl font-black uppercase text-white leading-[1.05]">
             {trip.title}
           </h1>
           <p className="mt-2 eyebrow text-brand">{trip.state}</p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <span className="chip !bg-black/40">{trip.days} Days / {trip.nights} Nights</span>
-            <span className="chip !bg-black/40">Starting ₹{Number(trip.startingPrice).toLocaleString("en-IN")}</span>
-            <span className="chip !bg-black/40 capitalize">{trip.travelType}</span>
-            <span className="chip !bg-black/40">{trip.rating}★ Rating</span>
+            <span className="chip !border-white/30 !bg-white/15 !px-4 !py-2 !text-sm !font-semibold !text-white backdrop-blur">
+              {trip.days} Days / {trip.nights} Nights
+            </span>
+            <span className="chip !border-transparent !bg-brand !px-4 !py-2 !text-sm !font-bold !text-brand-foreground">
+              Starting ₹{Number(trip.startingPrice).toLocaleString("en-IN")}
+            </span>
+            <span className="chip !border-white/30 !bg-white/15 !px-4 !py-2 !text-sm !font-semibold capitalize !text-white backdrop-blur">
+              {trip.travelType}
+            </span>
+            <span className="chip !border-white/30 !bg-white/15 !px-4 !py-2 !text-sm !font-semibold !text-white backdrop-blur">
+              {trip.rating}★ Rating
+            </span>
           </div>
         </div>
       </section>

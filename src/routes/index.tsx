@@ -67,13 +67,13 @@ function Home() {
             <p className="mt-12 text-center text-muted-foreground text-sm">No destinations yet. Check back soon.</p>
           )}
           {trips.data && trips.data.length > 0 && (
-            <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-12 grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {trips.data.map((d) => (
                 <Link
                   to="/destinations/$slug"
                   params={{ slug: d.slug }}
                   key={d.slug}
-                  className="group surface-card overflow-hidden relative"
+                  className="group surface-card overflow-hidden relative flex h-full flex-col"
                 >
                   <div className="relative aspect-[4/5] overflow-hidden bg-surface-2">
                     {d.images[0] && (
@@ -88,10 +88,10 @@ function Home() {
                       <Star className="h-3 w-3 fill-current" /> {d.rating}
                     </span>
                   </div>
-                  <div className="p-6 relative -mt-16 mx-4 rounded-2xl bg-surface/95 backdrop-blur border border-border">
+                  <div className="p-6 relative -mt-16 mx-4 mb-4 flex flex-1 flex-col rounded-2xl bg-surface/95 backdrop-blur border border-border">
                     <p className="eyebrow">{d.state}</p>
-                    <h3 className="mt-1 font-display text-2xl font-black uppercase">{d.title}</h3>
-                    <p className="mt-2 text-sm text-muted-foreground">{d.shortDescription}</p>
+                    <h3 className="mt-1 line-clamp-2 min-h-[3.5rem] font-display text-2xl font-black uppercase">{d.title}</h3>
+                    <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{d.shortDescription}</p>
                   </div>
                 </Link>
               ))}

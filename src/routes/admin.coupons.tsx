@@ -8,6 +8,7 @@ import { adminFetch } from "@/lib/admin-auth";
 import { ApiError } from "@/lib/api";
 import type { Coupon, DiscountKind } from "@/lib/types";
 import { Plus, Trash2, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/coupons")({
   component: CouponsAdmin,
@@ -78,8 +79,9 @@ function CouponsAdmin() {
       } else {
         await adminFetch("/api/admin/coupons", { method: "POST", body: JSON.stringify(body) });
       }
+      toast.success(editing.id ? "Coupon updated" : "Coupon created");
       setEditing(null); refresh();
-    } catch (e) { alert(e instanceof ApiError ? e.message : "Save failed"); }
+    } catch (e) { toast.error(e instanceof ApiError ? e.message : "Save failed"); }
     finally { setSaving(false); }
   };
 

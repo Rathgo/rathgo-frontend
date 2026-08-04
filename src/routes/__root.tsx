@@ -12,7 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { ThemeProvider } from "@/lib/theme";
-import rathgoLogo from "@/assets/rathgo_logo.jpg";
+import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -57,17 +57,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Rathgo — A unit of Chetan Tours Solution | Himalayan Batch Trips" },
-      { name: "description", content: "Rathgo, a unit of Chetan Tours Solution, runs curated Himalayan batch trips for solo travellers and couples. Travel together, never alone." },
-      { name: "author", content: "Chetan Tours Solution" },
-      { property: "og:title", content: "Rathgo — A unit of Chetan Tours Solution" },
+      { title: "Rathgo — A unit of Chetan Tours Solution Pvt. Ltd. | Himalayan Batch Trips" },
+      { name: "description", content: "Rathgo, a unit of Chetan Tours Solution Pvt. Ltd., runs curated Himalayan batch trips for solo travellers and couples. Travel together, never alone." },
+      { name: "author", content: "Chetan Tours Solution Pvt. Ltd." },
+      { property: "og:title", content: "Rathgo — A unit of Chetan Tours Solution Pvt. Ltd." },
       { property: "og:description", content: "Curated Himalayan batch trips for solo travellers and couples." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: rathgoLogo, type: "image/jpeg" },
+      { rel: "icon", href: "/favicon.png", type: "image/png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" },
@@ -100,6 +100,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <Outlet />
+        <Toaster richColors position="top-right" />
       </ThemeProvider>
     </QueryClientProvider>
   );

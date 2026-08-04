@@ -8,6 +8,7 @@ import { adminFetch } from "@/lib/admin-auth";
 import { ApiError } from "@/lib/api";
 import type { TeamMember } from "@/lib/types";
 import { Plus, Trash2, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/team-members")({
   component: TeamAdmin,
@@ -31,8 +32,9 @@ function TeamAdmin() {
       const body = { name: editing.name, isActive: editing.isActive, sortOrder: editing.sortOrder };
       if (editing.id) await adminFetch(`/api/admin/team-members/${editing.id}`, { method: "PUT", body: JSON.stringify(body) });
       else await adminFetch("/api/admin/team-members", { method: "POST", body: JSON.stringify(body) });
+      toast.success(editing.id ? "Team member updated" : "Team member added");
       setEditing(null); refresh();
-    } catch (e) { alert(e instanceof ApiError ? e.message : "Save failed"); }
+    } catch (e) { toast.error(e instanceof ApiError ? e.message : "Save failed"); }
     finally { setSaving(false); }
   };
 

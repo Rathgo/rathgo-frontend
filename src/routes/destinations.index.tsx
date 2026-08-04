@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Star, Calendar, Users } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Star, Calendar, Users, Search, X } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { LoadingBlock, ErrorBlock } from "@/components/query-status";
@@ -41,6 +42,15 @@ function DestinationsIndex() {
     queryFn: () => apiFetch<Trip[]>(`/api/trips?${params.toString()}`),
   });
 
+  const [query, setQuery] = useState("");
+  const visibleTrips = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return trips.data ?? [];
+    return (trips.data ?? []).filter((t) =>
+      `${t.title} ${t.state ?? ""}`.toLowerCase().includes(q),
+    );
+  }, [trips.data, query]);
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader transparent />
@@ -72,15 +82,32 @@ function DestinationsIndex() {
               </p>
             </div>
 
+            <div className="mt-8 mx-auto flex w-full max-w-xl items-center gap-2 rounded-full border border-border bg-surface-2 px-4 py-2">
+              <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search destinations by name..."
+                aria-label="Search destinations"
+                className="min-w-0 flex-1 bg-transparent py-1.5 text-sm text-foreground outline-none placeholder:text-muted-foreground"
+              />
+              {query && (
+                <button onClick={() => setQuery("")} aria-label="Clear search" className="shrink-0 text-muted-foreground hover:text-foreground">
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+
             {trips.isLoading && <LoadingBlock label="Loading trips..." />}
             {trips.isError && <ErrorBlock error={trips.error} onRetry={() => trips.refetch()} />}
-            {trips.data && trips.data.length === 0 && (
-              <p className="mt-10 text-center text-muted-foreground text-sm">No trips match your filters.</p>
+            {trips.data && visibleTrips.length === 0 && (
+              <p className="mt-10 text-center text-muted-foreground text-sm">No trips match your search.</p>
             )}
-            {trips.data && trips.data.length > 0 && (
-              <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {trips.data.map((d) => (
-                  <div key={d.slug} className="surface-card overflow-hidden bg-surface-2/60 flex flex-col">
+            {visibleTrips.length > 0 && (
+              <div className="mt-10 grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {visibleTrips.map((d) => (
+                  <div key={d.slug} className="surface-card overflow-hidden bg-surface-2/60 flex h-full flex-col">
                     <div className="relative aspect-[4/3] overflow-hidden bg-surface-2">
                       {d.images[0] && (
                         <img src={d.images[0].imageUrl} alt={d.title} loading="lazy" className="h-full w-full object-cover" />
@@ -91,8 +118,8 @@ function DestinationsIndex() {
                     </div>
                     <div className="p-5 flex-1 flex flex-col">
                       <p className="eyebrow">{d.state}</p>
-                      <h3 className="mt-1 font-display text-2xl font-black uppercase">{d.title}</h3>
-                      <p className="mt-2 text-sm text-muted-foreground">{d.shortDescription}</p>
+                      <h3 className="mt-1 line-clamp-2 min-h-[3.5rem] font-display text-2xl font-black uppercase">{d.title}</h3>
+                      <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{d.shortDescription}</p>
 
                       <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
                         <div>
@@ -111,13 +138,16 @@ function DestinationsIndex() {
                         <span className="flex items-center gap-1 text-xs"><Star className="h-3 w-3 fill-brand text-brand" /> {d.rating}</span>
                       </div>
 
-                      <Link
-                        to="/destinations/$slug"
-                        params={{ slug: d.slug }}
-                        className="btn-brand mt-5 w-full"
-                      >
-                        View Details
-                      </Link>
+                      <div className="mt-auto pt-5">
+                        <Link
+                          to="/destinations/$slug"
+                          params={{ slug: d.slug }}
+                          className="btn-brand w-full"
+                        >
+                          View Details
+                        </Link>
+                      </div>
+
                     </div>
                   </div>
                 ))}

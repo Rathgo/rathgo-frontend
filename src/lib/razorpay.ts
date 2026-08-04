@@ -53,7 +53,7 @@ export async function openRazorpay(
     amount: res.amountInPaise,
     currency: res.currency,
     order_id: res.razorpayOrderId,
-    name: "Chetan Tours Solution",
+    name: "Chetan Tours Solution Pvt. Ltd.",
     description: `Booking ${res.bookingRef}`,
     prefill: {
       name: res.prefillName ?? "",
