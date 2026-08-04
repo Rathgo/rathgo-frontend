@@ -2,7 +2,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { ThemeToggle } from "./theme-toggle";
-import rathgoLogo from "@/assets/rathgo-logo.png.asset.json";
+import rathgoLogo from "@/assets/rathgo-mark.png.asset.json";
 
 const nav = [
   { label: "Home", to: "/" },
@@ -34,13 +34,13 @@ export function SiteHeader({ transparent = false }: { transparent?: boolean }) {
             <img
               src={rathgoLogo.url}
               alt="Rathgo"
-              className="h-12 w-auto shrink-0 md:h-16"
+              className="h-14 w-auto shrink-0 md:h-20"
             />
             <span className="flex min-w-0 flex-col leading-none">
               <span className="font-display text-2xl font-black tracking-[0.15em] text-foreground md:text-4xl">
                 RATHGO
               </span>
-              <span className="mt-1 truncate text-[8px] uppercase tracking-[0.16em] text-foreground/70 md:text-[10px]">
+              <span className="mt-1 text-[8px] leading-tight uppercase tracking-[0.16em] text-foreground/70 md:text-[10px]">
                 A unit of Chetan Tours Solution Pvt. Ltd.
               </span>
             </span>

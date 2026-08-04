@@ -1,5 +1,5 @@
 import { Phone, Mail, MapPin } from "lucide-react";
-import rathgoLogo from "@/assets/rathgo-logo.png.asset.json";
+import rathgoLogo from "@/assets/rathgo-mark.png.asset.json";
 
 export function SiteFooter() {
   const year = new Date().getFullYear();
