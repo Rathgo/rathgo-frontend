@@ -138,13 +138,16 @@ function DestinationsIndex() {
                         <span className="flex items-center gap-1 text-xs"><Star className="h-3 w-3 fill-brand text-brand" /> {d.rating}</span>
                       </div>
 
-                      <Link
-                        to="/destinations/$slug"
-                        params={{ slug: d.slug }}
-                        className="btn-brand mt-auto pt-3 w-full"
-                      >
-                        View Details
-                      </Link>
+                      <div className="mt-auto pt-5">
+                        <Link
+                          to="/destinations/$slug"
+                          params={{ slug: d.slug }}
+                          className="btn-brand w-full"
+                        >
+                          View Details
+                        </Link>
+                      </div>
+
                     </div>
                   </div>
                 ))}
