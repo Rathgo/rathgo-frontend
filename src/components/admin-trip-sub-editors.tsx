@@ -69,8 +69,8 @@ function FeaturedEditor({ trip, onRefresh }: { trip: Trip; onRefresh: () => void
             } catch (e) { toast.error(e instanceof ApiError ? e.message : "Save failed"); }
             finally { setSaving(false); }
           }}
-          className="btn-brand !py-2 disabled:opacity-60"
-        >Save</button>
+          className="btn-brand !py-2 disabled:opacity-60 disabled:cursor-wait"
+        >{saving ? <><Loader2 className="h-4 w-4 animate-spin" /> Saving...</> : "Save"}</button>
       </div>
     </Section>
   );
@@ -148,7 +148,7 @@ function ItineraryEditor({ trip, onRefresh }: { trip: Trip; onRefresh: () => voi
           </div>
         ))}
       </div>
-      <button onClick={save} disabled={saving} className="btn-brand mt-4 disabled:opacity-60">
+      <button onClick={save} disabled={saving} className="btn-brand mt-4 disabled:opacity-60 disabled:cursor-wait">
         {saving && <Loader2 className="h-4 w-4 animate-spin" />} Save Itinerary
       </button>
     </Section>
@@ -187,7 +187,7 @@ function InclusionsEditor({ trip, onRefresh }: { trip: Trip; onRefresh: () => vo
           </div>
         ))}
       </div>
-      <button onClick={save} disabled={saving} className="btn-brand mt-4 disabled:opacity-60">Save</button>
+      <button onClick={save} disabled={saving} className="btn-brand mt-4 disabled:opacity-60 disabled:cursor-wait">{saving ? <><Loader2 className="h-4 w-4 animate-spin" /> Saving...</> : "Save"}</button>
     </Section>
   );
 }
@@ -240,7 +240,7 @@ function SharingEditor({ trip, onRefresh }: { trip: Trip; onRefresh: () => void 
           </div>
         ))}
       </div>
-      <button onClick={save} disabled={saving} className="btn-brand mt-4 disabled:opacity-60">Save Sharing</button>
+      <button onClick={save} disabled={saving} className="btn-brand mt-4 disabled:opacity-60 disabled:cursor-wait">{saving ? <><Loader2 className="h-4 w-4 animate-spin" /> Saving...</> : "Save Sharing"}</button>
     </Section>
   );
 }
