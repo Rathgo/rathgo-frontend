@@ -1,8 +1,8 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Phone, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { ThemeToggle } from "./theme-toggle";
-import rathgoLogo from "@/assets/rathgo_logo.jpg";
+import rathgoLogo from "@/assets/rathgo-logo.png.asset.json";
 
 const nav = [
   { label: "Home", to: "/" },
@@ -24,41 +24,31 @@ export function SiteHeader({ transparent = false }: { transparent?: boolean }) {
       }
     >
       <div className="container-page">
-        <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4 py-4 md:py-5">
-          {/* Left: phone */}
-          <div className="flex items-center gap-3 min-w-0">
-            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brand text-brand-foreground">
-              <Phone className="h-4 w-4" />
-            </span>
-            <div className="hidden sm:block min-w-0">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">For Further Inquiries</p>
-              <p className="text-sm font-semibold truncate text-foreground">+91 8750505497</p>
-            </div>
-          </div>
-
-          {/* Center: logo */}
+        <div className="flex items-center justify-between gap-3 py-4 md:py-5">
+          {/* Left: logo + company name */}
           <Link
             to="/"
-            className="justify-self-center flex items-center gap-3 min-w-0"
-            aria-label="Rathgo — a unit of Chetan Tours Solution"
+            className="flex min-w-0 items-center gap-3"
+            aria-label="Rathgo — a unit of Chetan Tours Solution Pvt. Ltd."
           >
             <img
-              src={rathgoLogo}
+              src={rathgoLogo.url}
               alt="Rathgo"
-              className="h-9 md:h-11 w-auto shrink-0 rounded bg-white p-1"
+              className="h-12 w-auto shrink-0 md:h-16"
             />
-            <span className="flex flex-col leading-none">
-              <span className="font-display text-2xl md:text-3xl font-black tracking-[0.15em] text-foreground">RATHGO</span>
-              <span className="mt-1 text-[9px] md:text-[10px] uppercase tracking-[0.18em] text-foreground/70">
-                A unit of Chetan Tours Solution
+            <span className="flex min-w-0 flex-col leading-none">
+              <span className="font-display text-2xl font-black tracking-[0.15em] text-foreground md:text-4xl">
+                RATHGO
+              </span>
+              <span className="mt-1 truncate text-[8px] uppercase tracking-[0.16em] text-foreground/70 md:text-[10px]">
+                A unit of Chetan Tours Solution Pvt. Ltd.
               </span>
             </span>
           </Link>
 
           {/* Right: actions */}
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
-            <Link to="/destinations" className="btn-brand !py-2 !px-4 hidden sm:inline-flex">
+          <div className="flex shrink-0 items-center gap-2">
+            <Link to="/destinations" className="btn-brand !px-4 !py-2 hidden sm:inline-flex">
               Book Now
             </Link>
             <button
@@ -88,6 +78,7 @@ export function SiteHeader({ transparent = false }: { transparent?: boolean }) {
               </Link>
             );
           })}
+          <ThemeToggle className="!h-7 !w-7 opacity-60 hover:opacity-100" />
         </nav>
 
         {/* Mobile nav */}
@@ -103,6 +94,10 @@ export function SiteHeader({ transparent = false }: { transparent?: boolean }) {
                 {n.label}
               </Link>
             ))}
+            <div className="flex items-center gap-3 px-3 pt-2">
+              <ThemeToggle className="!h-8 !w-8" />
+              <span className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Theme</span>
+            </div>
           </nav>
         )}
       </div>
