@@ -9,38 +9,28 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as StoriesRouteImport } from './routes/stories'
-import { Route as GalleryRouteImport } from './routes/gallery'
-import { Route as ContactRouteImport } from './routes/contact'
-import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as DestinationsIndexRouteImport } from './routes/destinations.index'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as GalleryRouteImport } from './routes/gallery'
+import { Route as StoriesRouteImport } from './routes/stories'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
-import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slug'
-import { Route as AdminTeamMembersRouteImport } from './routes/admin.team-members'
-import { Route as AdminStoriesRouteImport } from './routes/admin.stories'
-import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminCouponsRouteImport } from './routes/admin.coupons'
-import { Route as AdminTripsIndexRouteImport } from './routes/admin.trips.index'
+import { Route as AdminLoginRouteImport } from './routes/admin.login'
+import { Route as AdminStoriesRouteImport } from './routes/admin.stories'
+import { Route as AdminTeamMembersRouteImport } from './routes/admin.team-members'
+import { Route as DestinationsIndexRouteImport } from './routes/destinations.index'
+import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slug'
 import { Route as AdminBookingsIndexRouteImport } from './routes/admin.bookings.index'
-import { Route as BookingRefStatusRouteImport } from './routes/booking.$ref.status'
-import { Route as AdminTripsNewRouteImport } from './routes/admin.trips.new'
-import { Route as AdminTripsIdRouteImport } from './routes/admin.trips.$id'
 import { Route as AdminBookingsIdRouteImport } from './routes/admin.bookings.$id'
+import { Route as AdminTripsIndexRouteImport } from './routes/admin.trips.index'
+import { Route as AdminTripsIdRouteImport } from './routes/admin.trips.$id'
+import { Route as AdminTripsNewRouteImport } from './routes/admin.trips.new'
+import { Route as BookingRefStatusRouteImport } from './routes/booking.$ref.status'
 
-const StoriesRoute = StoriesRouteImport.update({
-  id: '/stories',
-  path: '/stories',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const GalleryRoute = GalleryRouteImport.update({
-  id: '/gallery',
-  path: '/gallery',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ContactRoute = ContactRouteImport.update({
-  id: '/contact',
-  path: '/contact',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -48,14 +38,19 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DestinationsIndexRoute = DestinationsIndexRouteImport.update({
-  id: '/destinations/',
-  path: '/destinations/',
+const GalleryRoute = GalleryRouteImport.update({
+  id: '/gallery',
+  path: '/gallery',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StoriesRoute = StoriesRouteImport.update({
+  id: '/stories',
+  path: '/stories',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
@@ -63,19 +58,9 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/admin/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DestinationsSlugRoute = DestinationsSlugRouteImport.update({
-  id: '/destinations/$slug',
-  path: '/destinations/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminTeamMembersRoute = AdminTeamMembersRouteImport.update({
-  id: '/admin/team-members',
-  path: '/admin/team-members',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminStoriesRoute = AdminStoriesRouteImport.update({
-  id: '/admin/stories',
-  path: '/admin/stories',
+const AdminCouponsRoute = AdminCouponsRouteImport.update({
+  id: '/admin/coupons',
+  path: '/admin/coupons',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
@@ -83,14 +68,24 @@ const AdminLoginRoute = AdminLoginRouteImport.update({
   path: '/admin/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminCouponsRoute = AdminCouponsRouteImport.update({
-  id: '/admin/coupons',
-  path: '/admin/coupons',
+const AdminStoriesRoute = AdminStoriesRouteImport.update({
+  id: '/admin/stories',
+  path: '/admin/stories',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminTripsIndexRoute = AdminTripsIndexRouteImport.update({
-  id: '/admin/trips/',
-  path: '/admin/trips/',
+const AdminTeamMembersRoute = AdminTeamMembersRouteImport.update({
+  id: '/admin/team-members',
+  path: '/admin/team-members',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DestinationsIndexRoute = DestinationsIndexRouteImport.update({
+  id: '/destinations/',
+  path: '/destinations/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DestinationsSlugRoute = DestinationsSlugRouteImport.update({
+  id: '/destinations/$slug',
+  path: '/destinations/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminBookingsIndexRoute = AdminBookingsIndexRouteImport.update({
@@ -98,14 +93,14 @@ const AdminBookingsIndexRoute = AdminBookingsIndexRouteImport.update({
   path: '/admin/bookings/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BookingRefStatusRoute = BookingRefStatusRouteImport.update({
-  id: '/booking/$ref/status',
-  path: '/booking/$ref/status',
+const AdminBookingsIdRoute = AdminBookingsIdRouteImport.update({
+  id: '/admin/bookings/$id',
+  path: '/admin/bookings/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminTripsNewRoute = AdminTripsNewRouteImport.update({
-  id: '/admin/trips/new',
-  path: '/admin/trips/new',
+const AdminTripsIndexRoute = AdminTripsIndexRouteImport.update({
+  id: '/admin/trips/',
+  path: '/admin/trips/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminTripsIdRoute = AdminTripsIdRouteImport.update({
@@ -113,9 +108,14 @@ const AdminTripsIdRoute = AdminTripsIdRouteImport.update({
   path: '/admin/trips/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminBookingsIdRoute = AdminBookingsIdRouteImport.update({
-  id: '/admin/bookings/$id',
-  path: '/admin/bookings/$id',
+const AdminTripsNewRoute = AdminTripsNewRouteImport.update({
+  id: '/admin/trips/new',
+  path: '/admin/trips/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookingRefStatusRoute = BookingRefStatusRouteImport.update({
+  id: '/booking/$ref/status',
+  path: '/booking/$ref/status',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -266,25 +266,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/stories': {
-      id: '/stories'
-      path: '/stories'
-      fullPath: '/stories'
-      preLoaderRoute: typeof StoriesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/gallery': {
-      id: '/gallery'
-      path: '/gallery'
-      fullPath: '/gallery'
-      preLoaderRoute: typeof GalleryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contact': {
-      id: '/contact'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof ContactRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -294,18 +280,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/destinations/': {
-      id: '/destinations/'
-      path: '/destinations'
-      fullPath: '/destinations/'
-      preLoaderRoute: typeof DestinationsIndexRouteImport
+    '/gallery': {
+      id: '/gallery'
+      path: '/gallery'
+      fullPath: '/gallery'
+      preLoaderRoute: typeof GalleryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/stories': {
+      id: '/stories'
+      path: '/stories'
+      fullPath: '/stories'
+      preLoaderRoute: typeof StoriesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/': {
@@ -315,25 +308,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/destinations/$slug': {
-      id: '/destinations/$slug'
-      path: '/destinations/$slug'
-      fullPath: '/destinations/$slug'
-      preLoaderRoute: typeof DestinationsSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/team-members': {
-      id: '/admin/team-members'
-      path: '/admin/team-members'
-      fullPath: '/admin/team-members'
-      preLoaderRoute: typeof AdminTeamMembersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/stories': {
-      id: '/admin/stories'
-      path: '/admin/stories'
-      fullPath: '/admin/stories'
-      preLoaderRoute: typeof AdminStoriesRouteImport
+    '/admin/coupons': {
+      id: '/admin/coupons'
+      path: '/admin/coupons'
+      fullPath: '/admin/coupons'
+      preLoaderRoute: typeof AdminCouponsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/login': {
@@ -343,18 +322,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/coupons': {
-      id: '/admin/coupons'
-      path: '/admin/coupons'
-      fullPath: '/admin/coupons'
-      preLoaderRoute: typeof AdminCouponsRouteImport
+    '/admin/stories': {
+      id: '/admin/stories'
+      path: '/admin/stories'
+      fullPath: '/admin/stories'
+      preLoaderRoute: typeof AdminStoriesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/trips/': {
-      id: '/admin/trips/'
-      path: '/admin/trips'
-      fullPath: '/admin/trips/'
-      preLoaderRoute: typeof AdminTripsIndexRouteImport
+    '/admin/team-members': {
+      id: '/admin/team-members'
+      path: '/admin/team-members'
+      fullPath: '/admin/team-members'
+      preLoaderRoute: typeof AdminTeamMembersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/destinations/': {
+      id: '/destinations/'
+      path: '/destinations'
+      fullPath: '/destinations/'
+      preLoaderRoute: typeof DestinationsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/destinations/$slug': {
+      id: '/destinations/$slug'
+      path: '/destinations/$slug'
+      fullPath: '/destinations/$slug'
+      preLoaderRoute: typeof DestinationsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/bookings/': {
@@ -364,18 +357,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminBookingsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/booking/$ref/status': {
-      id: '/booking/$ref/status'
-      path: '/booking/$ref/status'
-      fullPath: '/booking/$ref/status'
-      preLoaderRoute: typeof BookingRefStatusRouteImport
+    '/admin/bookings/$id': {
+      id: '/admin/bookings/$id'
+      path: '/admin/bookings/$id'
+      fullPath: '/admin/bookings/$id'
+      preLoaderRoute: typeof AdminBookingsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/trips/new': {
-      id: '/admin/trips/new'
-      path: '/admin/trips/new'
-      fullPath: '/admin/trips/new'
-      preLoaderRoute: typeof AdminTripsNewRouteImport
+    '/admin/trips/': {
+      id: '/admin/trips/'
+      path: '/admin/trips'
+      fullPath: '/admin/trips/'
+      preLoaderRoute: typeof AdminTripsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/trips/$id': {
@@ -385,11 +378,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminTripsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/bookings/$id': {
-      id: '/admin/bookings/$id'
-      path: '/admin/bookings/$id'
-      fullPath: '/admin/bookings/$id'
-      preLoaderRoute: typeof AdminBookingsIdRouteImport
+    '/admin/trips/new': {
+      id: '/admin/trips/new'
+      path: '/admin/trips/new'
+      fullPath: '/admin/trips/new'
+      preLoaderRoute: typeof AdminTripsNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/booking/$ref/status': {
+      id: '/booking/$ref/status'
+      path: '/booking/$ref/status'
+      fullPath: '/booking/$ref/status'
+      preLoaderRoute: typeof BookingRefStatusRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
