@@ -2,10 +2,20 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Phone, Mail, MapPin } from "lucide-react";
+import { SocialLinks } from "@/components/social-links";
 
 export const Route = createFileRoute("/contact")({
   component: Contact,
-  head: () => ({ meta: [{ title: "Contact Us — RATHGO" }] }),
+  head: () => ({
+    meta: [
+      { title: "Contact Rathgo — Chetan Tours Solution" },
+      { name: "description", content: "Contact Rathgo, a unit of Chetan Tours Solution Pvt. Ltd., to plan your next group trip." },
+      { property: "og:title", content: "Contact Rathgo — Chetan Tours Solution" },
+      { property: "og:description", content: "Get in touch with the Rathgo travel team." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
 });
 
 function Contact() {
@@ -24,6 +34,7 @@ function Contact() {
               <li className="flex items-center gap-2"><Mail className="h-4 w-4 text-brand" /> rathgo.travel@gmail.com</li>
               <li className="flex items-center gap-2"><MapPin className="h-4 w-4 text-brand" /> C-17/3, Shiv Shakti Apartment, Sector 71, Noida, Uttar Pradesh 201301</li>
             </ul>
+            <SocialLinks />
           </div>
           <form onSubmit={(e) => e.preventDefault()} className="surface-card p-8 space-y-3">
             <input placeholder="Full Name" className="w-full rounded-xl bg-surface-2 border border-border px-4 py-3 text-sm outline-none focus:border-brand" />
