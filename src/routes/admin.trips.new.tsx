@@ -6,6 +6,7 @@ import type { Trip } from "@/lib/types";
 import { ApiError } from "@/lib/api";
 import { useState } from "react";
 import { toast } from "sonner";
+import { toTripApiPayload } from "@/lib/trip-form";
 
 export const Route = createFileRoute("/admin/trips/new")({
   component: NewTrip,
@@ -26,14 +27,7 @@ function NewTrip() {
         onSubmit={async (values) => {
           setSaving(true); setError(null);
           try {
-            const payload = {
-              ...values,
-              days: Number(values.days),
-              nights: Number(values.nights),
-              startingPrice: Number(values.startingPrice),
-              rating: values.rating ? Number(values.rating) : undefined,
-              isActive: Boolean(values.isActive),
-            };
+            const payload = toTripApiPayload(values);
 
             const trip = await adminFetch<Trip>("/api/admin/trips", {
               method: "POST",

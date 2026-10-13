@@ -252,33 +252,43 @@ function BatchesEditor({ trip, onRefresh }: { trip: Trip; onRefresh: () => void 
     trip.batches.map((b) => ({ id: b.id, startDate: b.startDate, endDate: b.endDate, totalSeats: b.totalSeats, status: b.status }))
   );
   const [busy, setBusy] = useState(false);
+  const [busyBatchKey, setBusyBatchKey] = useState<string | null>(null);
 
-  const create = async (draft: BatchDraft) => {
+  const create = async (draft: BatchDraft, index: number) => {
     setBusy(true);
+    const batchKey = `new-${index}`;
+    setBusyBatchKey(batchKey);
     try {
       await adminFetch(`/api/admin/trips/${trip.id}/batches`, { method: "POST", body: JSON.stringify(draft) });
+      setItems((current) => current.filter((_, itemIndex) => itemIndex !== index));
+      toast.success("Batch added");
       onRefresh();
-    } catch (e) { alert(e instanceof ApiError ? e.message : "Create failed"); }
-    finally { setBusy(false); }
+    } catch (e) { toast.error(e instanceof ApiError ? e.message : "Batch could not be added"); }
+    finally { setBusy(false); setBusyBatchKey(null); }
   };
   const update = async (b: BatchDraft) => {
     if (!b.id) return;
     setBusy(true);
+    const batchKey = String(b.id);
+    setBusyBatchKey(batchKey);
     try {
       await adminFetch(`/api/admin/batches/${b.id}`, { method: "PUT", body: JSON.stringify(b) });
+      toast.success("Batch updated");
       onRefresh();
-    } catch (e) { alert(e instanceof ApiError ? e.message : "Update failed"); }
-    finally { setBusy(false); }
+    } catch (e) { toast.error(e instanceof ApiError ? e.message : "Batch could not be updated"); }
+    finally { setBusy(false); setBusyBatchKey(null); }
   };
   const del = async (b: BatchDraft) => {
     if (!b.id) { setItems(items.filter((x) => x !== b)); return; }
     if (!confirm("Delete batch?")) return;
     setBusy(true);
+    setBusyBatchKey(String(b.id));
     try {
       await adminFetch(`/api/admin/batches/${b.id}`, { method: "DELETE" });
+      toast.success("Batch deleted");
       onRefresh();
     } catch (e) { toast.error(e instanceof ApiError ? e.message : "Delete failed"); }
-    finally { setBusy(false); }
+    finally { setBusy(false); setBusyBatchKey(null); }
   };
 
   return (
@@ -301,8 +311,10 @@ function BatchesEditor({ trip, onRefresh }: { trip: Trip; onRefresh: () => void 
               <option value="available">Available</option><option value="limited">Limited</option>
               <option value="soldout">Sold Out</option><option value="inactive">Inactive</option>
             </select>
-            <button disabled={busy} onClick={() => b.id ? update(b) : create(b)} className="btn-brand !py-2 !px-3 text-xs disabled:opacity-60">
-              {b.id ? "Update" : "Create"}
+            <button disabled={busy} onClick={() => b.id ? update(b) : create(b, i)} className="btn-brand !py-2 !px-3 text-xs disabled:opacity-60">
+              {busy && busyBatchKey === String(b.id ?? `new-${i}`)
+                ? <><Loader2 className="h-4 w-4 animate-spin" /> {b.id ? "Updating..." : "Adding..."}</>
+                : b.id ? "Update" : "Create"}
             </button>
             <button onClick={() => del(b)} className="text-destructive p-2"><Trash2 className="h-4 w-4" /></button>
           </div>
