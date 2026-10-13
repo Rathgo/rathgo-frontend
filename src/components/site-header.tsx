@@ -11,7 +11,7 @@ const nav = [
   { label: "Contact Us", to: "/contact" },
 ];
 
-export function SiteHeader({ transparent = false }: { transparent?: boolean }) {
+export function SiteHeader(_props: { transparent?: boolean }) {
   const [open, setOpen] = useState(false);
   const { location } = useRouterState();
 
