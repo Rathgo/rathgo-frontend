@@ -1,5 +1,6 @@
 import { Phone, Mail, MapPin } from "lucide-react";
 import rathgoLogo from "@/assets/rathgo-mark.png.asset.json";
+import { SocialLinks } from "@/components/social-links";
 
 export function SiteFooter() {
   const year = new Date().getFullYear();
@@ -29,10 +30,7 @@ export function SiteFooter() {
             <li className="flex items-center gap-2 text-muted-foreground"><Mail className="h-4 w-4 text-brand shrink-0" /> rathgo.travel@gmail.com</li>
             <li className="flex items-start gap-2 text-muted-foreground"><MapPin className="h-4 w-4 text-brand shrink-0 mt-0.5" /> C-17/3, Shiv Shakti Apartment, Sector 71, Noida, Uttar Pradesh 201301</li>
           </ul>
-          <div className="mt-6 flex flex-wrap gap-2 text-[11px] uppercase tracking-[0.2em]">
-            <a href="#" className="chip">Instagram</a>
-            <a href="#" className="chip">Youtube</a>
-          </div>
+          <SocialLinks />
         </div>
       </div>
       <div className="border-t border-border">

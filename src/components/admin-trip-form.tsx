@@ -38,9 +38,9 @@ export function TripForm({
     if (initial) {
       setV({
         title: initial.title, slug: initial.slug, city: initial.city, state: initial.state,
-        days: initial.days, nights: initial.nights, startingPrice: initial.startingPrice,
+        days: initial.days, nights: initial.nights, startingPrice: String(initial.startingPrice),
         shortDescription: initial.shortDescription, longDescription: initial.longDescription ?? "",
-        rating: initial.rating, travelType: initial.travelType, isActive: initial.isActive,
+        rating: String(initial.rating), travelType: initial.travelType, isActive: initial.isActive,
       });
     }
   }, [initial]);

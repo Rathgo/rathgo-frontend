@@ -9,6 +9,7 @@ import { adminFetch } from "@/lib/admin-auth";
 import { ApiError, putSignedUpload } from "@/lib/api";
 import type { Trip } from "@/lib/types";
 import { toast } from "sonner";
+import { toTripApiPayload } from "@/lib/trip-form";
 
 export const Route = createFileRoute("/admin/trips/$id")({
   component: EditTrip,
@@ -41,7 +42,7 @@ function EditTrip() {
               try {
                 await adminFetch(`/api/admin/trips/${id}`, {
                   method: "PUT",
-                  body: JSON.stringify(values),
+                  body: JSON.stringify(toTripApiPayload(values)),
                 });
                 qc.invalidateQueries({ queryKey: ["admin", "trip", id] });
                 qc.invalidateQueries({ queryKey: ["admin", "trips"] });

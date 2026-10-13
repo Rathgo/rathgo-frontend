@@ -1,7 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import { ThemeToggle } from "./theme-toggle";
 import rathgoLogo from "@/assets/rathgo-mark.png.asset.json";
 
 const nav = [
@@ -12,18 +11,14 @@ const nav = [
   { label: "Contact Us", to: "/contact" },
 ];
 
-export function SiteHeader({ transparent = false }: { transparent?: boolean }) {
+export function SiteHeader(_props: { transparent?: boolean }) {
   const [open, setOpen] = useState(false);
   const { location } = useRouterState();
 
   return (
-    <header
-      className={
-        "absolute inset-x-0 top-0 z-30 " +
-        (transparent ? "bg-transparent" : "bg-background/80 backdrop-blur border-b border-border")
-      }
-    >
-      <div className="container-page">
+    <header className="absolute inset-x-0 top-0 z-30">
+      <span aria-hidden="true" className="pointer-events-none absolute inset-x-2 top-2 bottom-2 z-0 rounded-3xl border border-border/70 bg-background/75 shadow-xl backdrop-blur-xl sm:inset-x-4" />
+      <div className="container-page relative z-10">
         <div className="flex items-center justify-between gap-3 py-4 md:py-5">
           {/* Left: logo + company name */}
           <Link
@@ -78,12 +73,11 @@ export function SiteHeader({ transparent = false }: { transparent?: boolean }) {
               </Link>
             );
           })}
-          <ThemeToggle className="!h-7 !w-7 opacity-60 hover:opacity-100" />
         </nav>
 
         {/* Mobile nav */}
         {open && (
-          <nav className="lg:hidden pb-4 grid gap-1">
+          <nav className="lg:hidden mb-3 grid gap-1 rounded-2xl border border-border/70 bg-background/95 p-3 shadow-xl backdrop-blur-xl">
             {nav.map((n) => (
               <Link
                 key={n.to}
@@ -94,10 +88,6 @@ export function SiteHeader({ transparent = false }: { transparent?: boolean }) {
                 {n.label}
               </Link>
             ))}
-            <div className="flex items-center gap-3 px-3 pt-2">
-              <ThemeToggle className="!h-8 !w-8" />
-              <span className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Theme</span>
-            </div>
           </nav>
         )}
       </div>

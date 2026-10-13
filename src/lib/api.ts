@@ -2,12 +2,62 @@ import { API_BASE_URL } from "./env";
 
 export class ApiError extends Error {
   status: number;
-  details?: Record<string, string[] | string>;
-  constructor(message: string, status: number, details?: Record<string, string[] | string>) {
-    super(message);
+  details?: unknown;
+  constructor(message: string, status: number, details?: unknown) {
+    const readableDetails = collectValidationMessages(details);
+    const normalizedMessage = readableDetails.length > 0
+      ? `${message}: ${readableDetails.join("; ")}`
+      : message;
+    super(normalizedMessage);
     this.status = status;
     this.details = details;
   }
+}
+
+function formatFieldName(field: unknown): string {
+  const path = Array.isArray(field) ? field.join(".") : String(field ?? "");
+  return path
+    .split(".")
+    .filter(Boolean)
+    .map((part) => part.replace(/([a-z0-9])([A-Z])/g, "$1 $2").replace(/^./, (letter) => letter.toUpperCase()))
+    .join(" → ");
+}
+
+function collectValidationMessages(details: unknown): string[] {
+  const messages: string[] = [];
+  const transparentKeys = new Set(["details", "errors", "fieldErrors", "issues", "validationErrors"]);
+
+  const visit = (value: unknown, path: string[] = []) => {
+    if (typeof value === "string") {
+      const message = value.trim();
+      if (message) messages.push(path.length > 0 ? `${formatFieldName(path)}: ${message}` : message);
+      return;
+    }
+
+    if (Array.isArray(value)) {
+      value.forEach((entry) => visit(entry, path));
+      return;
+    }
+
+    if (typeof value !== "object" || value === null) return;
+
+    const record = value as Record<string, unknown>;
+    const message = record.message ?? record.reason;
+    if (typeof message === "string") {
+      const field = record.field ?? record.path ?? path;
+      const label = formatFieldName(field);
+      messages.push(label ? `${label}: ${message}` : message);
+      return;
+    }
+
+    Object.entries(record).forEach(([key, child]) => {
+      const nextPath = transparentKeys.has(key) || key === "formErrors" ? path : [...path, key];
+      visit(child, nextPath);
+    });
+  };
+
+  visit(details);
+  return [...new Set(messages)];
 }
 
 export type ApiFetchOptions = RequestInit & {
@@ -48,8 +98,12 @@ export async function apiFetch<T = unknown>(
   }
 
   if (!res.ok || (json && typeof json === "object" && (json as { success?: boolean }).success === false)) {
-    const err = json as { error?: string; details?: Record<string, string[] | string> } | null;
-    throw new ApiError(err?.error || `Request failed (${res.status})`, res.status, err?.details);
+    const err = json as { error?: string; message?: string; details?: unknown; errors?: unknown; validationErrors?: unknown } | null;
+    throw new ApiError(
+      err?.error || err?.message || `Request failed (${res.status})`,
+      res.status,
+      err?.details ?? err?.errors ?? err?.validationErrors,
+    );
   }
 
   if (raw) return json as T;
