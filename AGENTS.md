@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Keep public pages as TanStack file routes and send externally hosted inquiry forms directly to the user-provided destination, avoiding an unnecessary backend dependency.
