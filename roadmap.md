@@ -1,5 +1,5 @@
-- [ ] Remove light theme and theme controls; make the public navigation a readable glass surface on desktop and mobile.
-- [ ] Show validation reasons to admins and send numeric trip price/rating fields.
-- [ ] Add loading and success/error feedback to batch create/update.
-- [ ] Add the uploaded Instagram and YouTube links/icons to the footer and contact page.
-- [ ] Fix the existing root error component typing and verify the app.
+- [ ] Rebuild the public navigation with a centered blurred link capsule and add Custom Trips.
+- [ ] Update Contact Us details, office map, and Google Apps Script form submission.
+- [ ] Add the responsive Custom & Corporate Trips page and inquiry form.
+- [ ] Add the director/founder section and rotating 6-photo homepage gallery.
+- [ ] Verify all content-page metadata, preview build, and task completion.
