@@ -5,8 +5,8 @@ import { toast } from "sonner";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Button } from "@/components/ui/button";
-import corporateOne from "@/assets/corporate1.jpeg.asset.json";
-import corporateTwo from "@/assets/corporate2.jpeg.asset.json";
+import corporateOne from "@/assets/corporate1.jpeg";
+import corporateTwo from "@/assets/corporate2.jpeg";
 
 const customTripsEndpoint = "https://script.google.com/macros/s/AKfycbz4gU1LZHd9D9dLOvC2ea8vhFiE-t86UP8SOkAdDNLcQM8uR5svGgw3vQX9Qq4tBAg2xw/exec";
 
@@ -71,11 +71,11 @@ function CustomTrips() {
               </div>
               <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <figure className="overflow-hidden rounded-xl border border-border bg-surface">
-                  <img src={corporateOne.url} alt="Group team trip together" className="aspect-[4/3] w-full object-cover" />
+                  <img src={corporateOne} alt="Group team trip together" className="aspect-[4/3] w-full object-cover" />
                   <figcaption className="px-3 py-3 text-xs font-semibold sm:px-4 sm:text-sm">Team Offsites &amp; Conferences</figcaption>
                 </figure>
                 <figure className="overflow-hidden rounded-xl border border-border bg-surface">
-                  <img src={corporateTwo.url} alt="Curated group journey" className="aspect-[4/3] w-full object-cover" />
+                  <img src={corporateTwo} alt="Curated group journey" className="aspect-[4/3] w-full object-cover" />
                   <figcaption className="px-3 py-3 text-xs font-semibold sm:px-4 sm:text-sm">Curated Group Expeditions</figcaption>
                 </figure>
               </div>

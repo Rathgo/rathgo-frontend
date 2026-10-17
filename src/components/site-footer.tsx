@@ -1,5 +1,5 @@
 import { Phone, Mail, MapPin } from "lucide-react";
-import rathgoLogo from "@/assets/rathgo-mark.png.asset.json";
+import rathgoLogo from "@/assets/rathgo-mark.png";
 import { SocialLinks } from "@/components/social-links";
 
 export function SiteFooter() {
@@ -9,7 +9,7 @@ export function SiteFooter() {
       <div className="container-page py-14 grid gap-10 md:grid-cols-2">
         <div>
           <div className="flex items-center gap-3">
-            <img src={rathgoLogo.url} alt="Rathgo" className="h-16 w-auto md:h-20" />
+            <img src={rathgoLogo} alt="Rathgo" className="h-16 w-auto md:h-20" />
             <div className="leading-none min-w-0">
               <p className="font-display text-3xl font-black tracking-[0.15em] text-foreground md:text-4xl">RATHGO</p>
               <p className="mt-1 text-[9px] uppercase tracking-[0.16em] text-foreground/70 md:text-[10px]">

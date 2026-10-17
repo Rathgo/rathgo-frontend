@@ -1,7 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import rathgoLogo from "@/assets/rathgo-mark.png.asset.json";
+import rathgoLogo from "@/assets/rathgo-mark.png";
 import { Button } from "@/components/ui/button";
 
 const nav = [
@@ -27,7 +27,7 @@ export function SiteHeader(_props: { transparent?: boolean }) {
             aria-label="Rathgo — a unit of Chetan Tours Solution Pvt. Ltd."
           >
             <img
-              src={rathgoLogo.url}
+              src={rathgoLogo}
               alt="Rathgo"
               className="h-12 w-auto shrink-0 sm:h-14 lg:h-16"
             />
