@@ -2,9 +2,10 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import {
-  Check, Mountain, MapPin, ArrowRight, Upload, Pencil, User, Users,
+  Check, ArrowRight, Upload, Pencil, User, Users,
   Plus, Minus, ChevronRight, Loader2, X,
 } from "lucide-react";
+import { memberValidationErrors, joinValidationErrors } from "@/lib/validation";
 import { z } from "zod";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { SiteHeader } from "@/components/site-header";
@@ -43,6 +44,7 @@ function DestinationDetail() {
   const [step, setStep] = useState<number>(initialStep && existingRef ? Math.min(initialStep, 4) : 1);
   const [bookingRef, setBookingRef] = useState<string | null>(existingRef ?? null);
   const { booking } = useLocalBooking(bookingRef);
+  const [lightbox, setLightbox] = useState<string | null>(null);
 
   const goStep = (s: number, ref?: string) => {
     setStep(s);
@@ -167,22 +169,28 @@ function DestinationDetail() {
               </div>
             )}
 
-            <div className="surface-card p-6 md:p-8">
-              <p className="eyebrow">Trip Highlights</p>
-              <h2 className="mt-2 font-display text-3xl md:text-4xl font-black uppercase">Top Experiences in {trip.title}</h2>
-              <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                <div className="rounded-xl bg-surface-2 border border-border p-4">
-                  <Mountain className="h-5 w-5 text-brand" />
-                  <p className="mt-2 text-xs font-bold tracking-[0.18em] uppercase">Scenic Views</p>
-                  <p className="mt-1 text-sm text-muted-foreground">Unforgettable Himalayan panoramas.</p>
-                </div>
-                <div className="rounded-xl bg-surface-2 border border-border p-4">
-                  <MapPin className="h-5 w-5 text-brand" />
-                  <p className="mt-2 text-xs font-bold tracking-[0.18em] uppercase">Local Experiences</p>
-                  <p className="mt-1 text-sm text-muted-foreground">Cafés, culture and community.</p>
+            {trip.images.length > 1 && (
+              <div className="surface-card p-6 md:p-8">
+                <p className="eyebrow">Photo Gallery</p>
+                <h2 className="mt-2 font-display text-3xl md:text-4xl font-black uppercase">Moments from {trip.title}</h2>
+                <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  {trip.images.slice(1).map((img) => (
+                    <button
+                      key={img.id}
+                      onClick={() => setLightbox(img.imageUrl)}
+                      className="group relative aspect-[4/3] overflow-hidden rounded-xl border border-border bg-surface-2"
+                    >
+                      <img
+                        src={img.imageUrl}
+                        alt={img.altText || trip.title}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                      />
+                    </button>
+                  ))}
                 </div>
               </div>
-            </div>
+            )}
           </div>
 
           <aside className="lg:sticky lg:top-6 h-fit">
@@ -218,6 +226,18 @@ function DestinationDetail() {
       </section>
 
       <SiteFooter />
+
+      {lightbox && (
+        <div
+          className="fixed inset-0 z-50 grid place-items-center bg-black/85 p-6"
+          onClick={() => setLightbox(null)}
+        >
+          <button aria-label="Close image" className="absolute top-5 right-5 text-white/80 hover:text-white">
+            <X className="h-7 w-7" />
+          </button>
+          <img src={lightbox} alt="" className="max-h-[85vh] max-w-full rounded-xl object-contain" />
+        </div>
+      )}
     </div>
   );
 }
@@ -493,6 +513,8 @@ function StepTwoSolo({ booking, onBack, onContinue, onEdit }: { booking: Booking
   };
 
   const submit = async () => {
+    const problems = memberValidationErrors(m);
+    if (problems.length > 0) { setError(joinValidationErrors(problems)); return; }
     if (!m.aadharFrontKey || !m.aadharBackKey) {
       setError("Please upload both Aadhar images before continuing.");
       return;
@@ -570,6 +592,10 @@ function StepThreeInner({ booking, onBack, onContinue, onEdit, title }: {
 
   const submit = async () => {
     if (!members.some((m) => m.isPrimary)) { setError("Mark one member as primary"); return; }
+    const allProblems = members.flatMap((m, i) =>
+      memberValidationErrors(m).map((p) => `Member ${i + 1}: ${p}`),
+    );
+    if (allProblems.length > 0) { setError(joinValidationErrors(allProblems)); return; }
     if (!members.every((m) => m.aadharFrontKey && m.aadharBackKey)) {
       setError("Please upload both Aadhar images for every member before continuing.");
       return;
@@ -640,7 +666,7 @@ function MemberFields({ member, onChange }: {
         onChange={(e) => onChange("address", e.target.value)}
         className="w-full rounded-xl bg-surface-2 border border-border px-4 py-3 text-sm outline-none focus:border-brand" />
       <div className="grid grid-cols-2 gap-2">
-        <Field label="Age" type="number" value={member.age || ""} onChange={(e) => onChange("age", Number(e.target.value))} />
+        <Field label="Age" type="number" min={1} max={120} value={member.age || ""} onChange={(e) => onChange("age", Number(e.target.value))} />
         <select value={member.gender} onChange={(e) => onChange("gender", e.target.value as Member["gender"])}
           className="w-full rounded-xl bg-surface-2 border border-border px-4 py-3 text-sm outline-none focus:border-brand">
           <option value="male">Male</option><option value="female">Female</option><option value="other">Other</option>
