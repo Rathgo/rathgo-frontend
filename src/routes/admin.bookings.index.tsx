@@ -60,28 +60,45 @@ function BookingsAdmin() {
     navigate({ search: { ...s, ...patch, page: 1 } });
 
   const exportExcel = async () => {
-    setExporting(true);
-    try {
-      const all = new URLSearchParams();
-      if (s.status) all.set("status", s.status);
-      if (s.search) all.set("search", s.search);
-      if (s.tripId) all.set("tripId", String(s.tripId));
-      if (s.batchId) all.set("batchId", String(s.batchId));
-      all.set("page", "1");
-      all.set("limit", "1000");
-      const rows = await adminFetch<BookingListRow[]>(`/api/admin/bookings?${all.toString()}`);
-      if (rows.length === 0) {
-        toast.error("No bookings match the current filters — nothing to export.");
-        return;
-      }
-      await exportBookingsExcel(rows, new Date().toISOString().slice(0, 10));
-      toast.success(`Exported ${rows.length} booking${rows.length > 1 ? "s" : ""} to Excel.`);
-    } catch (e) {
-      toast.error(e instanceof ApiError ? e.message : "Export failed. Please try again.");
-    } finally {
-      setExporting(false);
+  setExporting(true);
+  try {
+    const allRows: BookingListRow[] = [];
+    let page = 1;
+    const batchSize = 100; // backend max limit
+
+    while (true) {
+      const params = new URLSearchParams();
+      if (s.status) params.set("status", s.status);
+      if (s.search) params.set("search", s.search);
+      if (s.tripId) params.set("tripId", String(s.tripId));
+      if (s.batchId) params.set("batchId", String(s.batchId));
+      params.set("page", String(page));
+      params.set("limit", String(batchSize));
+
+      const batch = await adminFetch<BookingListRow[]>(`/api/admin/bookings?${params.toString()}`);
+      if (!batch || batch.length === 0) break;
+
+      allRows.push(...batch);
+
+      // If fewer than 100 returned, we've reached the last page
+      if (batch.length < batchSize) break;
+      page += 1;
     }
-  };
+
+    if (allRows.length === 0) {
+      toast.error("No bookings match the current filters — nothing to export.");
+      return;
+    }
+
+    await exportBookingsExcel(allRows, new Date().toISOString().slice(0, 10));
+    toast.success(`Exported ${allRows.length} booking${allRows.length > 1 ? "s" : ""} to Excel.`);
+  } catch (e) {
+    toast.error(e instanceof ApiError ? e.message : "Export failed. Please try again.");
+  } finally {
+    setExporting(false);
+  }
+};
+
 
   return (
     <AdminShell title="Bookings">
