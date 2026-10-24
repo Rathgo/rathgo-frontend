@@ -65,6 +65,7 @@ export interface Story {
   tripLabel: string | null;
   rating: string;
   images: StoryImage[];
+  createdAt: string;
   isActive?: boolean;
   sortOrder?: number;
 }

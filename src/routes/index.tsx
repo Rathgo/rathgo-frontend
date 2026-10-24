@@ -148,7 +148,12 @@ function Home() {
 
   const testimonials = useQuery({
     queryKey: ["testimonials", "latest"],
-    queryFn: () => apiFetch<Story[]>("/api/stories/latest"),
+    queryFn: async () => {
+      const stories = await apiFetch<Story[]>("/api/stories");
+      return stories
+        .sort((first, second) => Date.parse(second.createdAt) - Date.parse(first.createdAt))
+        .slice(0, 3);
+    },
   });
 
   return (
