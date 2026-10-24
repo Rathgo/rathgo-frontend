@@ -8,7 +8,7 @@ const nav = [
   { label: "Home", to: "/" },
   { label: "Destinations", to: "/destinations" },
   { label: "Custom Trips", to: "/custom-trips" },
-  { label: "Stories", to: "/stories" },
+  { label: "Testimonials", to: "/stories" },
   { label: "Contact Us", to: "/contact" },
 ];
 

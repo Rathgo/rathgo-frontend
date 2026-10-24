@@ -10,7 +10,7 @@ const nav: Array<{ to: string; label: string; icon: typeof LayoutDashboard; exac
   { to: "/admin/trips", label: "Trips", icon: Map },
   { to: "/admin/bookings", label: "Bookings", icon: ClipboardList },
   { to: "/admin/coupons", label: "Coupons", icon: Ticket },
-  { to: "/admin/stories", label: "Stories", icon: MessageSquareQuote },
+  { to: "/admin/stories", label: "Testimonials", icon: MessageSquareQuote },
   { to: "/admin/team-members", label: "Team", icon: Users },
 ];
 

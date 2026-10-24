@@ -12,7 +12,7 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/stories")({
   component: StoriesAdmin,
-  head: () => ({ meta: [{ title: "Stories — Admin" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Testimonials — Admin" }, { name: "robots", content: "noindex" }] }),
 });
 
 type Draft = {
@@ -57,7 +57,7 @@ function StoriesAdmin() {
 
   const uploadGalleryImages = async (files: File[]) => {
     if (!editing?.id) {
-      toast.error("Save the story before adding gallery images");
+      toast.error("Save the testimonial before adding gallery images");
       return;
     }
 
@@ -123,7 +123,7 @@ function StoriesAdmin() {
       };
       if (editing.id) await adminFetch(`/api/admin/stories/${editing.id}`, { method: "PUT", body: JSON.stringify(body) });
       else await adminFetch("/api/admin/stories", { method: "POST", body: JSON.stringify(body) });
-      toast.success(editing.id ? "Story updated" : "Story created");
+      toast.success(editing.id ? "Testimonial updated" : "Testimonial created");
       setEditing(null); refresh();
     } catch (e) { toast.error(e instanceof ApiError ? e.message : "Save failed"); }
     finally { setSaving(false); }
@@ -136,11 +136,11 @@ function StoriesAdmin() {
   };
 
   return (
-    <AdminShell title="Stories">
+    <AdminShell title="Testimonials">
       <div className="flex justify-between items-center mb-6">
-        <p className="text-sm text-muted-foreground">Traveller testimonials.</p>
+        <p className="text-sm text-muted-foreground">Testimonials from our travellers.</p>
         <button onClick={() => setEditing({ title: "", content: "", category: "solo", travellerName: "", isActive: true, sortOrder: 0, rating: "5.0" })} className="btn-brand">
-          <Plus className="h-4 w-4" /> New Story
+          <Plus className="h-4 w-4" /> New Testimonial
         </button>
       </div>
 
@@ -161,14 +161,14 @@ function StoriesAdmin() {
               </div>
             </div>
           ))}
-          {q.data.length === 0 && <p className="text-muted-foreground text-sm col-span-full text-center py-8">No stories.</p>}
+          {q.data.length === 0 && <p className="text-muted-foreground text-sm col-span-full text-center py-8">No testimonials yet.</p>}
         </div>
       )}
 
       {editing && (
         <div className="fixed inset-0 z-50 bg-black/60 grid place-items-center p-4 overflow-y-auto" onClick={() => setEditing(null)}>
           <div className="surface-card p-6 md:p-8 w-full max-w-2xl my-8" onClick={(e) => e.stopPropagation()}>
-            <h3 className="font-display text-xl font-black uppercase">{editing.id ? "Edit" : "New"} Story</h3>
+            <h3 className="font-display text-xl font-black uppercase">{editing.id ? "Edit" : "New"} Testimonial</h3>
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               <Input label="Title" value={editing.title} onChange={(v) => setEditing({ ...editing, title: v })} required />
               <Input label="Traveller Name" value={editing.travellerName} onChange={(v) => setEditing({ ...editing, travellerName: v })} required />
@@ -212,7 +212,7 @@ function StoriesAdmin() {
                 ))}
                 <label className="grid h-24 w-32 cursor-pointer place-items-center rounded-lg border-2 border-dashed border-border text-center text-xs hover:border-brand">
                   {uploading === "gallery" ? <Loader2 className="h-5 w-5 animate-spin text-brand" /> : <Upload className="h-5 w-5 text-brand" />}
-                  <span>{editing.id ? "Add images" : "Save story first"}</span>
+                  <span>{editing.id ? "Add images" : "Save testimonial first"}</span>
                   <input
                     type="file"
                     accept="image/jpeg,image/png,image/webp"

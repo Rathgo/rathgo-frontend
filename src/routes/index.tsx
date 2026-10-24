@@ -6,7 +6,8 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { LoadingBlock, ErrorBlock } from "@/components/query-status";
 import { apiFetch } from "@/lib/api";
-import type { Trip } from "@/lib/types";
+import type { Story, Trip } from "@/lib/types";
+import { TestimonialCard } from "@/components/testimonial-card";
 import heroImg from "@/assets/hero-mountains.jpg";
 import g1 from "@/assets/gallery-1.jpg";
 import g2 from "@/assets/gallery-2.jpg";
@@ -145,6 +146,11 @@ function Home() {
     queryFn: () => apiFetch<Trip[]>("/api/trips"),
   });
 
+  const testimonials = useQuery({
+    queryKey: ["testimonials", "latest"],
+    queryFn: () => apiFetch<Story[]>("/api/stories/latest"),
+  });
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <SiteHeader transparent />
@@ -271,7 +277,7 @@ function Home() {
               </p>
             </section>
             <article className="rounded-xl border border-border bg-background p-6 sm:p-8">
-              <span className="eyebrow">Trust and story</span>
+              <span className="eyebrow">Experience and trust</span>
               <h3 className="mt-2 font-display text-2xl font-bold uppercase">
                 From the founder’s desk
               </h3>
@@ -315,7 +321,7 @@ function Home() {
 
           <div className="mt-8 text-center">
             <Link to="/stories" className="btn-brand">
-              Read All Stories <ArrowRight className="h-3 w-3" />
+              View Testimonials <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
         </div>
@@ -329,7 +335,7 @@ function Home() {
                 Ready for Your Next Adventure?
               </h2>
               <p className="mt-3 text-sm md:text-base text-brand-foreground/85 max-w-xl">
-                Join a batch. Meet strangers. Come back with stories worth telling.
+                Join a batch. Meet strangers. Come back with memories worth sharing.
               </p>
             </div>
             <Link
@@ -337,6 +343,43 @@ function Home() {
               className="btn-ghost-pill !border-white/60 !text-white hover:!bg-white/10"
             >
               Explore Destinations
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 md:py-20">
+        <div className="container-page">
+          <header className="mx-auto max-w-2xl text-center">
+            <span className="eyebrow">Real Experiences</span>
+            <h2 className="mt-3 font-display text-4xl font-black uppercase md:text-5xl">
+              Latest Testimonials
+            </h2>
+            <p className="mt-4 text-sm text-muted-foreground md:text-base">
+              Hear from travellers who have experienced Rathgo.
+            </p>
+          </header>
+
+          {testimonials.isLoading && <LoadingBlock label="Loading testimonials..." />}
+          {testimonials.isError && (
+            <ErrorBlock error={testimonials.error} onRetry={() => testimonials.refetch()} />
+          )}
+          {testimonials.data && testimonials.data.length > 0 && (
+            <div className="mt-10 grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {testimonials.data.map((testimonial) => (
+                <TestimonialCard key={testimonial.id} testimonial={testimonial} />
+              ))}
+            </div>
+          )}
+          {testimonials.data?.length === 0 && (
+            <p className="mt-8 text-center text-sm text-muted-foreground">
+              Testimonials will appear here soon.
+            </p>
+          )}
+
+          <div className="mt-8 text-center">
+            <Link to="/stories" className="btn-brand">
+              View All Testimonials <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
         </div>
