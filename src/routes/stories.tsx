@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
@@ -128,12 +128,37 @@ function StoryCard({ story, compact }: { story: Story; compact: boolean }) {
   const images = [...coverImage, ...galleryImages];
   const activeImage = images.length > 0 ? imageIndex % images.length : 0;
 
+  useEffect(() => {
+    setImageIndex(0);
+    if (images.length < 2) return;
+
+    const intervalId = window.setInterval(() => {
+      setImageIndex((index) => (index + 1) % images.length);
+    }, 4000);
+
+    return () => window.clearInterval(intervalId);
+  }, [story.id, images.length]);
+
   return (
     <article className="surface-card overflow-hidden bg-surface flex flex-col">
       <div className={"relative overflow-hidden bg-surface-2 " + (compact ? "aspect-[4/3]" : "aspect-square")}>
         {images.length > 0 && (
           <>
-            <img src={images[activeImage].imageUrl} alt={images[activeImage].altText ?? ""} loading="lazy" className="h-full w-full object-cover" />
+            <div
+              className="flex h-full w-full transition-transform duration-500 ease-in-out motion-reduce:transition-none"
+              style={{ transform: `translateX(-${activeImage * 100}%)` }}
+            >
+              {images.map((image) => (
+                <div key={image.id} className="h-full min-w-full">
+                  <img
+                    src={image.imageUrl}
+                    alt={image.altText ?? ""}
+                    loading="lazy"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+              ))}
+            </div>
             {images.length > 1 && (
               <>
                 <button
