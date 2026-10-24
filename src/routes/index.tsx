@@ -324,11 +324,6 @@ function Home() {
             ))}
           </div>
 
-          <div className="mt-8 text-center">
-            <Link to="/stories" className="btn-brand">
-              View Testimonials <ArrowRight className="h-3 w-3" />
-            </Link>
-          </div>
         </div>
       </section>
 
