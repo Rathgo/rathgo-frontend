@@ -6,8 +6,8 @@ import { LoadingBlock, ErrorBlock } from "@/components/query-status";
 import { Input, Label } from "@/components/admin-trip-form";
 import { adminFetch } from "@/lib/admin-auth";
 import { ApiError, putSignedUpload } from "@/lib/api";
-import type { Story, StoryCategory } from "@/lib/types";
-import { Plus, Trash2, Loader2, Upload } from "lucide-react";
+import type { Story, StoryCategory, StoryImage } from "@/lib/types";
+import { Plus, Trash2, Loader2, Upload, X } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/stories")({
@@ -29,6 +29,7 @@ type Draft = {
   rating?: string | null;
   isActive: boolean;
   sortOrder: number;
+  images?: StoryImage[];
 };
 
 function StoriesAdmin() {
@@ -36,7 +37,7 @@ function StoriesAdmin() {
   const q = useQuery({ queryKey: ["admin", "stories"], queryFn: () => adminFetch<Story[]>("/api/admin/stories") });
   const [editing, setEditing] = useState<Draft | null>(null);
   const [saving, setSaving] = useState(false);
-  const [uploading, setUploading] = useState<"cover" | "avatar" | null>(null);
+  const [uploading, setUploading] = useState<"cover" | "avatar" | "gallery" | null>(null);
 
   const refresh = () => qc.invalidateQueries({ queryKey: ["admin", "stories"] });
 
@@ -54,12 +55,59 @@ function StoriesAdmin() {
     finally { setUploading(null); }
   };
 
+  const uploadGalleryImages = async (files: File[]) => {
+    if (!editing?.id) {
+      toast.error("Save the story before adding gallery images");
+      return;
+    }
+
+    setUploading("gallery");
+    try {
+      let sortOrder = Math.max(-1, ...(editing.images ?? []).map((image) => image.sortOrder)) + 1;
+      for (const file of Array.from(files)) {
+        const { uploadUrl, key } = await adminFetch<{ uploadUrl: string; key: string }>(
+          `/api/admin/stories/${editing.id}/images/upload-url`,
+          { method: "POST", body: JSON.stringify({ contentType: file.type }) }
+        );
+        await putSignedUpload(uploadUrl, file, file.type);
+        const image = await adminFetch<StoryImage>(`/api/admin/stories/${editing.id}/images`, {
+          method: "POST",
+          body: JSON.stringify({ imageKey: key, sortOrder }),
+        });
+        sortOrder++;
+        setEditing((current) => current && current.id === editing.id
+          ? { ...current, images: [...(current.images ?? []), image] }
+          : current
+        );
+      }
+      refresh();
+    } catch (e) {
+      toast.error(e instanceof ApiError ? e.message : "Gallery upload failed");
+    } finally {
+      setUploading(null);
+    }
+  };
+
+  const removeGalleryImage = async (image: StoryImage) => {
+    if (!editing?.id) return;
+    try {
+      await adminFetch(`/api/admin/stories/${editing.id}/images/${image.id}`, { method: "DELETE" });
+      setEditing((current) => current && ({
+        ...current,
+        images: (current.images ?? []).filter((item) => item.id !== image.id),
+      }));
+      refresh();
+    } catch (e) {
+      toast.error(e instanceof ApiError ? e.message : "Unable to remove image");
+    }
+  };
+
   const save = async () => {
     if (!editing) return;
     if (!editing.id && !editing.coverImageKey) { toast.error("Cover image required"); return; }
     setSaving(true);
     try {
-      const body: any = {
+      const body = {
         title: editing.title,
         content: editing.content,
         category: editing.category,
@@ -144,6 +192,41 @@ function StoriesAdmin() {
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               <UploadBox label="Cover Image" url={editing.coverImageUrl ?? undefined} uploading={uploading === "cover"} onFile={(f) => upload("cover", f)} />
               <UploadBox label="Avatar" url={editing.travellerAvatarUrl ?? undefined} uploading={uploading === "avatar"} onFile={(f) => upload("avatar", f)} />
+            </div>
+
+            <div className="mt-5">
+              <Label>Gallery Images</Label>
+              <div className="mt-2 flex flex-wrap gap-3">
+                {editing.images?.map((image) => (
+                  <div key={image.id} className="relative">
+                    <img src={image.imageUrl} alt={image.altText ?? ""} className="h-24 w-32 rounded-lg object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => removeGalleryImage(image)}
+                      aria-label="Remove gallery image"
+                      className="absolute -right-2 -top-2 rounded-full bg-background p-1 text-destructive shadow"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                ))}
+                <label className="grid h-24 w-32 cursor-pointer place-items-center rounded-lg border-2 border-dashed border-border text-center text-xs hover:border-brand">
+                  {uploading === "gallery" ? <Loader2 className="h-5 w-5 animate-spin text-brand" /> : <Upload className="h-5 w-5 text-brand" />}
+                  <span>{editing.id ? "Add images" : "Save story first"}</span>
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    multiple
+                    hidden
+                    disabled={!editing.id || uploading !== null}
+                    onChange={(e) => {
+                      const files = e.target.files;
+                      if (files?.length) void uploadGalleryImages(Array.from(files));
+                      e.target.value = "";
+                    }}
+                  />
+                </label>
+              </div>
             </div>
 
             <label className="mt-4 flex items-center gap-2 text-sm">

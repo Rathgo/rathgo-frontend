@@ -45,16 +45,26 @@ export interface Trip {
 
 export interface TeamMember { id: number; name: string; isActive: boolean; sortOrder: number }
 
+export interface StoryImage {
+  id: number;
+  imageKey: string;
+  imageUrl: string;
+  altText: string | null;
+  sortOrder: number;
+}
+
 export interface Story {
   id: number;
   title: string;
   content: string;
   category: StoryCategory;
   travellerName: string;
+  coverImageKey?: string;
   coverImageUrl: string;
   travellerAvatarUrl: string | null;
   tripLabel: string | null;
   rating: string;
+  images: StoryImage[];
   isActive?: boolean;
   sortOrder?: number;
 }

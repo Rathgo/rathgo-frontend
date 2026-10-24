@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Star } from "lucide-react";
+import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { LoadingBlock, ErrorBlock } from "@/components/query-status";
@@ -118,12 +118,55 @@ function Stories() {
 }
 
 function StoryCard({ story, compact }: { story: Story; compact: boolean }) {
+  const [imageIndex, setImageIndex] = useState(0);
   const catLabel: Record<StoryCategory, string> = { solo: "SOLO", couple: "COUPLE", group: "GROUP" };
+  const galleryImages = story.images ?? [];
+  const coverImage = story.coverImageUrl &&
+    !galleryImages.some((image) => image.imageKey === story.coverImageKey || image.imageUrl === story.coverImageUrl)
+    ? [{ id: -1, imageUrl: story.coverImageUrl, altText: null }]
+    : [];
+  const images = [...coverImage, ...galleryImages];
+  const activeImage = images.length > 0 ? imageIndex % images.length : 0;
+
   return (
     <article className="surface-card overflow-hidden bg-surface flex flex-col">
       <div className={"relative overflow-hidden bg-surface-2 " + (compact ? "aspect-[4/3]" : "aspect-square")}>
-        {story.coverImageUrl && (
-          <img src={story.coverImageUrl} alt="" loading="lazy" className="h-full w-full object-cover" />
+        {images.length > 0 && (
+          <>
+            <img src={images[activeImage].imageUrl} alt={images[activeImage].altText ?? ""} loading="lazy" className="h-full w-full object-cover" />
+            {images.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setImageIndex((activeImage - 1 + images.length) % images.length)}
+                  aria-label="Previous story image"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/55 p-2 text-white hover:bg-black/75"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setImageIndex((activeImage + 1) % images.length)}
+                  aria-label="Next story image"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/55 p-2 text-white hover:bg-black/75"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+                <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5">
+                  {images.map((image, index) => (
+                    <button
+                      key={image.id}
+                      type="button"
+                      onClick={() => setImageIndex(index)}
+                      aria-label={`Show story image ${index + 1}`}
+                      aria-current={index === activeImage}
+                      className={`h-1.5 w-1.5 rounded-full ${index === activeImage ? "bg-white" : "bg-white/50"}`}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </>
         )}
         {story.tripLabel && (
           <span className="absolute left-4 top-4 rounded-full bg-brand px-3 py-1 text-[10px] uppercase tracking-widest text-brand-foreground">
