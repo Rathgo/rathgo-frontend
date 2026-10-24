@@ -87,8 +87,8 @@ function Stories() {
           )}
           {q.data && q.data.length > 0 && (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {q.data.map((s, idx) => (
-                <StoryCard key={s.id} story={s} compact={idx % 3 === 1} />
+              {q.data.map((s) => (
+                <StoryCard key={s.id} story={s} />
               ))}
             </div>
           )}
@@ -117,7 +117,7 @@ function Stories() {
   );
 }
 
-function StoryCard({ story, compact }: { story: Story; compact: boolean }) {
+function StoryCard({ story }: { story: Story }) {
   const [imageIndex, setImageIndex] = useState(0);
   const catLabel: Record<StoryCategory, string> = { solo: "SOLO", couple: "COUPLE", group: "GROUP" };
   const galleryImages = story.images ?? [];
@@ -140,8 +140,8 @@ function StoryCard({ story, compact }: { story: Story; compact: boolean }) {
   }, [story.id, images.length]);
 
   return (
-    <article className="surface-card overflow-hidden bg-surface flex flex-col">
-      <div className={"relative overflow-hidden bg-surface-2 " + (compact ? "aspect-[4/3]" : "aspect-square")}>
+    <article className="surface-card h-full overflow-hidden bg-surface flex flex-col">
+      <div className="relative aspect-video overflow-hidden bg-surface-2">
         {images.length > 0 && (
           <>
             <div
@@ -199,10 +199,16 @@ function StoryCard({ story, compact }: { story: Story; compact: boolean }) {
           </span>
         )}
       </div>
-      <div className="p-6 flex-1 flex flex-col">
-        <h3 className="font-display text-xl font-black uppercase leading-tight">{story.title}</h3>
-        <p className="mt-3 text-sm text-muted-foreground flex-1">{story.content}</p>
-        <div className="mt-5 pt-4 border-t border-border flex items-center justify-between">
+      <div className="flex flex-1 flex-col p-6">
+        <h3 className="min-h-12 line-clamp-2 font-display text-xl font-black uppercase leading-tight">{story.title}</h3>
+        <p
+          tabIndex={0}
+          aria-label="Story content"
+          className="mt-3 h-24 shrink-0 overflow-y-auto text-sm text-muted-foreground"
+        >
+          {story.content}
+        </p>
+        <div className="mt-5 border-t border-border pt-4 flex items-center justify-between">
           <div className="flex items-center gap-3 min-w-0">
             {story.travellerAvatarUrl ? (
               <img src={story.travellerAvatarUrl} alt="" className="h-9 w-9 rounded-full object-cover shrink-0" />
