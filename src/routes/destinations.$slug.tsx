@@ -458,7 +458,16 @@ function BookingHeader({ booking, onEdit }: { booking: Booking; onEdit?: () => v
 /* --------------- Steps 2 & 3 (member details + aadhar) --------------- */
 
 function emptyMember(isPrimary: boolean): Member {
-  return { fullName: "", age: 0, gender: "male", phone: "", email: "", address: "", isPrimary };
+  return {
+    fullName: "",
+    age: 0,
+    gender: "male",
+    phone: "",
+    email: "",
+    address: "",
+    medicalCondition: "",
+    isPrimary,
+  };
 }
 
 function StepTwo({ booking, onBack, onContinue, onEdit }: {
@@ -665,6 +674,15 @@ function MemberFields({ member, onChange }: {
       <textarea placeholder="Address" rows={2} value={member.address}
         onChange={(e) => onChange("address", e.target.value)}
         className="w-full rounded-xl bg-surface-2 border border-border px-4 py-3 text-sm outline-none focus:border-brand" />
+      <textarea
+        aria-label="Any medical condition"
+        placeholder="Any medical condition (optional)"
+        rows={2}
+        maxLength={2000}
+        value={member.medicalCondition ?? ""}
+        onChange={(e) => onChange("medicalCondition", e.target.value)}
+        className="w-full rounded-xl bg-surface-2 border border-border px-4 py-3 text-sm outline-none focus:border-brand"
+      />
       <div className="grid grid-cols-2 gap-2">
         <Field label="Age" type="number" min={1} max={120} value={member.age || ""} onChange={(e) => onChange("age", Number(e.target.value))} />
         <select value={member.gender} onChange={(e) => onChange("gender", e.target.value as Member["gender"])}

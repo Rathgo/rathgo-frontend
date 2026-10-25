@@ -49,6 +49,7 @@ export function buildBookingsWorkbook(rows: BookingExportRow[]) {
       "Phone": m.phone,
       "Email": m.email,
       "Address": m.address ?? "",
+      "Medical Condition": m.medicalCondition ?? "",
     })),
   );
 

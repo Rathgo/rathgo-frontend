@@ -78,6 +78,7 @@ export interface Member {
   phone: string;
   email: string;
   address: string;
+  medicalCondition?: string | null;
   isPrimary: boolean;
   aadharFrontKey?: string | null;
   aadharBackKey?: string | null;

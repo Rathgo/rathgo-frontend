@@ -70,6 +70,10 @@ function BookingDetail() {
                       </div>
                     </div>
                     {m.address && <p className="mt-2 text-xs text-muted-foreground">{m.address}</p>}
+                    <p className="mt-2 text-xs text-muted-foreground">
+                      <span className="font-semibold">Medical condition:</span>{" "}
+                      {m.medicalCondition?.trim() || "Not provided"}
+                    </p>
                   </div>
                 ))}
               </div>
