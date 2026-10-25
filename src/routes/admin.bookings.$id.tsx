@@ -21,11 +21,12 @@ function BookingDetail() {
   const [updatingStatus, setUpdatingStatus] = useState<"confirmed" | "cancelled" | null>(null);
 
   const setStatus = async (status: "confirmed" | "cancelled") => {
-    const alreadyConfirmed = q.data?.bookingStatus === "confirmed";
+    const wasAlreadyConfirmed = q.data?.bookingStatus === "confirmed";
+    const invoiceAlreadyExists = q.data?.invoice != null;
     const message = status === "confirmed"
-      ? alreadyConfirmed
-        ? "This booking is already confirmed. Do you want to regenerate its invoice and resend the confirmation email to the primary traveller?"
-        : "Are you sure you want to confirm this booking? This will mark it as paid, generate an invoice, and email the primary traveller."
+      ? wasAlreadyConfirmed
+        ? "Are you sure you want to generate the missing invoice and send the booking confirmation email?"
+        : "Are you sure you want to confirm this booking? This will mark it as paid, generate an invoice, and send the booking confirmation email."
       : "Are you sure you want to cancel this booking? Its reserved seats will be released. This does not issue a refund.";
     if (!confirm(message)) return;
 
@@ -38,8 +39,12 @@ function BookingDetail() {
       ]);
       toast.success(
         status === "confirmed"
-          ? alreadyConfirmed
-            ? "Invoice generated and confirmation email sent"
+          ? wasAlreadyConfirmed
+            ? invoiceAlreadyExists
+              ? "Booking is already confirmed"
+              : q.data?.invoice === null
+                ? "Invoice generated and confirmation email sent"
+                : "Invoice request completed; refresh to verify its status"
             : "Booking confirmed, invoice generated, and confirmation email sent"
           : "Booking cancelled"
       );
@@ -121,10 +126,13 @@ function BookingDetail() {
                 <div className="flex justify-between"><dt className="text-muted-foreground">Status</dt><dd className="capitalize">{q.data.bookingStatus}</dd></div>
               </dl>
               <button
-                disabled={q.data.paymentStatus !== "paid"}
+                disabled={q.data.paymentStatus !== "paid" || q.data.invoice === null}
                 onClick={() => openSigned(`/api/admin/bookings/${id}/invoice-url`)}
                 className="btn-brand mt-5 w-full disabled:opacity-40"
-              ><FileText className="h-4 w-4" /> Invoice PDF</button>
+              >
+                <FileText className="h-4 w-4" />
+                {q.data.invoice === null ? "Invoice not generated" : "Invoice PDF"}
+              </button>
             </div>
 
             <div className="surface-card p-6">
@@ -133,13 +141,17 @@ function BookingDetail() {
                 <button
                   onClick={() => setStatus("confirmed")}
                   className="btn-brand disabled:opacity-60"
-                  disabled={updatingStatus !== null || ["cancelled", "expired"].includes(q.data.bookingStatus)}
+                  disabled={
+                    updatingStatus !== null ||
+                    ["cancelled", "expired"].includes(q.data.bookingStatus) ||
+                    (q.data.bookingStatus === "confirmed" && q.data.invoice !== null)
+                  }
                 >
                   {updatingStatus === "confirmed" && <Loader2 className="h-4 w-4 animate-spin" />}
                   {updatingStatus === "confirmed"
                     ? "Confirming..."
                     : q.data.bookingStatus === "confirmed"
-                      ? "Regenerate Invoice & Resend Email"
+                      ? q.data.invoice === null ? "Generate Missing Invoice" : "Booking Confirmed"
                       : "Mark Confirmed"}
                 </button>
                 <button

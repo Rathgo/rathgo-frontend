@@ -99,6 +99,7 @@ export interface Booking {
   batch: Batch;
   sharingType: SharingType;
   members: Member[];
+  invoice?: { id: number; invoiceNumber: string; pdfKey: string } | null;
   coupon?: { code: string } | null;
 }
 
