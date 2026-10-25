@@ -5,7 +5,9 @@ import { LoadingBlock, ErrorBlock } from "@/components/query-status";
 import { adminFetch } from "@/lib/admin-auth";
 import { ApiError } from "@/lib/api";
 import type { Booking } from "@/lib/types";
-import { FileText, ExternalLink } from "lucide-react";
+import { FileText, ExternalLink, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/bookings/$id")({
   component: BookingDetail,
@@ -16,13 +18,40 @@ function BookingDetail() {
   const { id } = Route.useParams();
   const qc = useQueryClient();
   const q = useQuery({ queryKey: ["admin", "booking", id], queryFn: () => adminFetch<Booking>(`/api/admin/bookings/${id}`) });
+  const [updatingStatus, setUpdatingStatus] = useState<"confirmed" | "cancelled" | null>(null);
 
   const setStatus = async (status: "confirmed" | "cancelled") => {
-    if (!confirm(`Mark as ${status}?`)) return;
+    const alreadyConfirmed = q.data?.bookingStatus === "confirmed";
+    const message = status === "confirmed"
+      ? alreadyConfirmed
+        ? "This booking is already confirmed. Do you want to regenerate its invoice and resend the confirmation email to the primary traveller?"
+        : "Are you sure you want to confirm this booking? This will mark it as paid, generate an invoice, and email the primary traveller."
+      : "Are you sure you want to cancel this booking? Its reserved seats will be released. This does not issue a refund.";
+    if (!confirm(message)) return;
+
+    setUpdatingStatus(status);
     try {
       await adminFetch(`/api/admin/bookings/${id}/status`, { method: "PUT", body: JSON.stringify({ status }) });
-      qc.invalidateQueries({ queryKey: ["admin", "booking", id] });
-    } catch (e) { alert(e instanceof ApiError ? e.message : "Failed"); }
+      await Promise.all([
+        qc.invalidateQueries({ queryKey: ["admin", "booking", id] }),
+        qc.invalidateQueries({ queryKey: ["admin", "bookings"] }),
+      ]);
+      toast.success(
+        status === "confirmed"
+          ? alreadyConfirmed
+            ? "Invoice generated and confirmation email sent"
+            : "Booking confirmed, invoice generated, and confirmation email sent"
+          : "Booking cancelled"
+      );
+    } catch (e) {
+      await Promise.all([
+        qc.invalidateQueries({ queryKey: ["admin", "booking", id] }),
+        qc.invalidateQueries({ queryKey: ["admin", "bookings"] }),
+      ]);
+      toast.error(e instanceof ApiError ? e.message : `Unable to ${status === "confirmed" ? "confirm" : "cancel"} booking`);
+    } finally {
+      setUpdatingStatus(null);
+    }
   };
 
   const openSigned = async (path: string) => {
@@ -101,8 +130,26 @@ function BookingDetail() {
             <div className="surface-card p-6">
               <h2 className="font-display text-lg font-black uppercase">Actions</h2>
               <div className="mt-4 grid gap-2">
-                <button onClick={() => setStatus("confirmed")} className="btn-brand" disabled={q.data.bookingStatus === "confirmed"}>Mark Confirmed</button>
-                <button onClick={() => setStatus("cancelled")} className="btn-ghost-pill" disabled={q.data.bookingStatus === "cancelled"}>Cancel Booking</button>
+                <button
+                  onClick={() => setStatus("confirmed")}
+                  className="btn-brand disabled:opacity-60"
+                  disabled={updatingStatus !== null || ["cancelled", "expired"].includes(q.data.bookingStatus)}
+                >
+                  {updatingStatus === "confirmed" && <Loader2 className="h-4 w-4 animate-spin" />}
+                  {updatingStatus === "confirmed"
+                    ? "Confirming..."
+                    : q.data.bookingStatus === "confirmed"
+                      ? "Regenerate Invoice & Resend Email"
+                      : "Mark Confirmed"}
+                </button>
+                <button
+                  onClick={() => setStatus("cancelled")}
+                  className="btn-ghost-pill disabled:opacity-60"
+                  disabled={updatingStatus !== null || ["cancelled", "expired"].includes(q.data.bookingStatus)}
+                >
+                  {updatingStatus === "cancelled" && <Loader2 className="h-4 w-4 animate-spin" />}
+                  {updatingStatus === "cancelled" ? "Cancelling..." : "Cancel Booking"}
+                </button>
               </div>
             </div>
           </aside>
